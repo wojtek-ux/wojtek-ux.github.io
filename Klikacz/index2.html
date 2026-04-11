@@ -2,103 +2,119 @@
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
-<title>Sklep</title>
+<title>Galactic Clicker</title>
 
 <style>
 body {
-    background:#020617;
-    color:white;
+    margin:0;
+    background: radial-gradient(circle, #020617, #000);
+    color:cyan;
     font-family:Arial;
     text-align:center;
-    padding-top:50px;
+    user-select:none;
 }
 
-button {
-    padding:12px;
-    margin:10px;
-    background:cyan;
-    border:none;
-    border-radius:10px;
+/* ✨ gwiazdy (NAPRAWIONE) */
+body::before {
+    content:"";
+    position:fixed;
+    width:200%;
+    height:200%;
+    background: radial-gradient(white 1px, transparent 1px);
+    background-size:40px 40px;
+    animation: stars 40s linear infinite;
+    opacity:0.15;
+
+    pointer-events:none; /* 🔥 TO NAPRAWIA KLIK */
+}
+
+@keyframes stars {
+    from {transform:translate(0,0);}
+    to {transform:translate(-400px,-400px);}
+}
+
+/* 🌯 obrazek */
+#clickBtn {
+    width:220px;
+    border-radius:20px;
     cursor:pointer;
-    font-weight:bold;
+    box-shadow:0 0 40px cyan;
+    transition:0.2s;
 }
 
-button:hover {
-    background:white;
+#clickBtn:active {
+    transform:scale(0.9);
+}
+
+/* 🔘 sklep */
+.shopBtn {
+    display:inline-block;
+    margin:10px;
+    padding:12px 20px;
+    background:cyan;
+    border-radius:10px;
+    font-weight:bold;
+    text-decoration:none;
+    color:black;
+}
+
+.shopBtn:active {
+    transform:scale(0.95);
 }
 </style>
 </head>
 
 <body>
 
-<h1>💎 Sklep 💎</h1>
+<h1>🚀 CLICKER 🚀</h1>
+
 <h2 id="points">0</h2>
 
-<button onclick="buyClick()">+1 klik (10)</button>
-<button onclick="buyAuto()">Auto klik (50)</button>
-<button onclick="rebirth()">💀 REBIRTH (1M)</button>
+<img src="Klik1.jpg" id="clickBtn">
 
 <br><br>
-<button onclick="back()">⬅ Powrót</button>
+
+<!-- 🔥 DZIAŁA NA PEWNO -->
+<a href="index2.html" class="shopBtn">💎 SKLEP</a>
 
 <script>
 
 let points = Number(localStorage.getItem("points")) || 0;
 let clickPower = Number(localStorage.getItem("clickPower")) || 1;
 let auto = Number(localStorage.getItem("auto")) || 0;
-let rebirths = Number(localStorage.getItem("rebirths")) || 0;
 
 function update(){
     document.getElementById("points").innerText =
-        "Punkty: " + points + " | 💀 Rebirthy: " + rebirths;
+        "⚡ " + points + " | Klik: " + clickPower + " | Auto: " + auto;
 }
 
 function save(){
     localStorage.setItem("points", points);
     localStorage.setItem("clickPower", clickPower);
     localStorage.setItem("auto", auto);
-    localStorage.setItem("rebirths", rebirths);
     update();
 }
 
-function buyClick(){
-    if(points >= 10){
-        points -= 10;
-        clickPower++;
-        save();
-    } else {
-        alert("Za mało punktów!");
+function click(){
+    points += clickPower;
+    save();
+}
+
+document.getElementById("clickBtn").onclick = click;
+
+document.addEventListener("keydown", (e)=>{
+    if(e.code === "Space"){
+        e.preventDefault();
+        click();
     }
-}
+});
 
-function buyAuto(){
-    if(points >= 50){
-        points -= 50;
-        auto++;
+setInterval(()=>{
+    if(auto > 0){
+        points += auto;
         save();
-    } else {
-        alert("Za mało punktów!");
     }
-}
-
-function rebirth(){
-    if(points >= 1000000){
-        rebirths++;
-        alert("💀 REBIRTH x" + rebirths);
-
-        points = 0;
-        clickPower = 1;
-        auto = 0;
-
-        save();
-    } else {
-        alert("Potrzebujesz 1,000,000!");
-    }
-}
-
-function back(){
-    window.location.href = "index.html";
-}
+},1000);
 
 update();
 
