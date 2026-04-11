@@ -12,6 +12,6 @@ Nick Generator, Link : https://wojtek-ux.github.io/Nick%20Generator/
 
 Quiz, Link : https://wojtek-ux.github.io/Quiz/
 
-Cliker, Link : https://wojtek-ux.github.io/Klikacz/
+Cliker, Link : https://wojtek-ux.github.io/Klikacz/index.html
 
 (More updates son)
