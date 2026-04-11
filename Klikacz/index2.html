@@ -14,18 +14,21 @@ body {
     user-select:none;
 }
 
-/* ✨ gwiazdy (NAPRAWIONE) */
+/* 🔥 GWIAZDY (NAPRAWIONE NA STAŁE) */
 body::before {
     content:"";
     position:fixed;
-    width:200%;
-    height:200%;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
     background: radial-gradient(white 1px, transparent 1px);
     background-size:40px 40px;
     animation: stars 40s linear infinite;
     opacity:0.15;
 
-    pointer-events:none; /* 🔥 TO NAPRAWIA KLIK */
+    pointer-events:none; /* 💀 NAJWAŻNIEJSZE */
+    z-index:-1; /* 🔥 jeszcze lepiej */
 }
 
 @keyframes stars {
@@ -74,7 +77,6 @@ body::before {
 
 <br><br>
 
-<!-- 🔥 DZIAŁA NA PEWNO -->
 <a href="index2.html" class="shopBtn">💎 SKLEP</a>
 
 <script>
