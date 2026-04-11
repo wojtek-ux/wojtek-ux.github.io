@@ -2,135 +2,121 @@
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
-<title>GALACTIC CHAOS</title>
+<title>GALACTIC CLICKER</title>
 
 <style>
 body {
     margin:0;
-    background:black;
-    color:lime;
-    font-family:monospace;
+    background: radial-gradient(circle, #020617, #000);
+    color:cyan;
+    font-family:Orbitron, monospace;
     text-align:center;
     overflow:hidden;
 }
 
-/* 🌌 glitch tło */
+/* ✨ gwiazdy */
 body::before {
     content:"";
     position:fixed;
     width:200%;
     height:200%;
-    background: repeating-linear-gradient(
-        0deg,
-        rgba(0,255,0,0.05) 0px,
-        rgba(0,255,0,0.05) 2px,
-        transparent 2px,
-        transparent 4px
-    );
-    animation: glitchbg 0.2s infinite;
+    background: radial-gradient(white 1px, transparent 1px);
+    background-size:40px 40px;
+    animation: stars 40s linear infinite;
+    opacity:0.15;
 }
 
-@keyframes glitchbg {
-    0% { transform:translate(0,0); }
-    50% { transform:translate(5px,-5px); }
-    100% { transform:translate(0,0); }
+@keyframes stars {
+    from {transform:translate(0,0);}
+    to {transform:translate(-400px,-400px);}
 }
 
-/* 🔥 GLITCH TEXT */
+/* 🔥 neon title */
 h1 {
-    font-size:40px;
-    animation: glitch 0.3s infinite;
+    text-shadow:0 0 15px cyan, 0 0 40px blue;
 }
 
-@keyframes glitch {
-    0% { text-shadow: 2px 0 red, -2px 0 blue; }
-    50% { text-shadow: -2px 0 red, 2px 0 blue; }
-    100% { text-shadow: 2px 0 red, -2px 0 blue; }
-}
-
+/* 💎 punkty */
 #points {
     font-size:25px;
     margin:20px;
 }
 
-/* 💥 KEBAB */
-#kebab {
-    width:200px;
+/* 💥 przycisk (już nie oślepia) */
+#clickBtn {
+    width:180px;
+    height:180px;
+    border-radius:50%;
+    background:linear-gradient(45deg, #00ffff, #0044ff);
+    border:none;
+    color:white;
+    font-size:18px;
     cursor:pointer;
-    filter: drop-shadow(0 0 30px lime);
-    transition:0.1s;
+    box-shadow:0 0 25px cyan;
+    transition:0.2s;
 }
 
-#kebab:active {
-    transform:scale(0.9) rotate(10deg);
+#clickBtn:hover {
+    transform:scale(1.1);
+    box-shadow:0 0 50px cyan;
+}
+
+#clickBtn:active {
+    transform:scale(0.9);
 }
 
 /* ⚡ przyciski */
 button {
     margin:10px;
     padding:10px;
-    background:black;
-    color:lime;
-    border:1px solid lime;
+    background:cyan;
+    border:none;
+    border-radius:10px;
+    font-weight:bold;
     cursor:pointer;
 }
 
 button:hover {
-    background:lime;
-    color:black;
-}
-
-/* 💀 glitch popup */
-.glitch {
-    position:absolute;
-    color:red;
-    font-size:30px;
-    animation: spam 0.3s infinite;
-}
-
-@keyframes spam {
-    0% { transform:translate(0,0); }
-    50% { transform:translate(10px,-10px); }
-    100% { transform:translate(0,0); }
+    background:white;
 }
 </style>
 </head>
 
 <body>
 
-<h1>💀 SYSTEM CHAOS 💀</h1>
+<h1>🚀 GALACTIC CLICKER 🚀</h1>
 
 <h2 id="points">0</h2>
 
-<img src="Klik1.jpg" id="kebab">
+<button id="clickBtn">CLICK</button>
 
 <br><br>
 
-<button onclick="goShop()">💎 SKLEP</button>
+<button onclick="goShop()">💎 Sklep</button>
 
 <script>
 
 let points = Number(localStorage.getItem("points")) || 0;
 let clickPower = Number(localStorage.getItem("clickPower")) || 1;
+let auto = Number(localStorage.getItem("auto")) || 0;
 
-/* update */
 function update(){
     document.getElementById("points").innerText = "Punkty: " + points;
 }
 
-/* save */
 function save(){
     localStorage.setItem("points", points);
     localStorage.setItem("clickPower", clickPower);
+    localStorage.setItem("auto", auto);
     update();
 }
 
 /* klik */
-document.getElementById("kebab").onclick = () => {
+document.getElementById("clickBtn").onclick = () => {
     click();
 };
 
-/* SPACJA = klik */
+/* SPACJA */
 document.addEventListener("keydown", (e)=>{
     if(e.code === "Space"){
         e.preventDefault();
@@ -142,20 +128,29 @@ function click(){
     points += clickPower;
     save();
 
-    // 💥 efekt glitch
+    // 🔥 mały efekt (nie rozwala strony)
     let el = document.createElement("div");
-    el.className = "glitch";
     el.innerText = "+1";
-    el.style.left = Math.random()*window.innerWidth + "px";
-    el.style.top = Math.random()*window.innerHeight + "px";
+    el.style.position = "absolute";
+    el.style.left = (window.innerWidth/2 + Math.random()*100-50)+"px";
+    el.style.top = (window.innerHeight/2 + Math.random()*100-50)+"px";
+    el.style.color = "cyan";
     document.body.appendChild(el);
 
-    setTimeout(()=> el.remove(), 500);
+    setTimeout(()=>el.remove(), 400);
 }
+
+/* auto */
+setInterval(()=>{
+    if(auto>0){
+        points += auto;
+        save();
+    }
+},1000);
 
 /* sklep */
 function goShop(){
-    window.location.href = "index2.html";
+    window.location.href="index2.html";
 }
 
 update();
