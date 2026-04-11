@@ -20,6 +20,12 @@ h1 {
     text-shadow: 0 0 15px cyan;
 }
 
+#stats {
+    font-size:18px;
+    margin-top:10px;
+    color:cyan;
+}
+
 img {
     width:220px;
     margin-top:50px;
@@ -49,8 +55,6 @@ img:active {
     position:fixed;
     width:100%;
     height:100%;
-    background:transparent;
-    overflow:hidden;
     z-index:-1;
 }
 
@@ -66,6 +70,20 @@ img:active {
     from { transform: translateY(0); }
     to { transform: translateY(100vh); }
 }
+
+button {
+    margin:10px;
+    padding:10px 20px;
+    border:none;
+    border-radius:10px;
+    background:cyan;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+button:hover {
+    background:white;
+}
 </style>
 
 </head>
@@ -73,22 +91,35 @@ img:active {
 <body>
 
 <h1 id="points">⚡ 0 ⚡</h1>
+<div id="stats"></div>
 
 <img src="Klik1.jpg" onclick="addPoint(event)">
+
+<br>
+
+<button onclick="goShop()">💎 Sklep</button>
+<button onclick="goEvent()">👾 Event</button>
 
 <div class="stars" id="stars"></div>
 
 <script>
-let points = localStorage.getItem("points") || 0;
-document.getElementById("points").innerText = "⚡ " + points + " ⚡";
+let points = parseInt(localStorage.getItem("points") || 0);
+let clickPower = parseInt(localStorage.getItem("clickPower") || 1);
+let auto = parseInt(localStorage.getItem("auto") || 0);
+
+function updateUI(){
+    document.getElementById("points").innerText = "⚡ " + points + " ⚡";
+    document.getElementById("stats").innerText =
+        "Klik: +" + clickPower + " | Auto: " + auto + "/s";
+}
 
 function addPoint(e) {
-    points++;
-    document.getElementById("points").innerText = "⚡ " + points + " ⚡";
-    localStorage.setItem("points", points);
+    points += clickPower;
+    updateUI();
+    save();
 
     let plus = document.createElement("div");
-    plus.innerText = "+1";
+    plus.innerText = "+" + clickPower;
     plus.className = "plus";
 
     plus.style.left = e.clientX + "px";
@@ -99,7 +130,29 @@ function addPoint(e) {
     setTimeout(() => plus.remove(), 1000);
 }
 
-// STARS BACKGROUND
+function save(){
+    localStorage.setItem("points", points);
+}
+
+// AUTO CLICK
+setInterval(() => {
+    if(auto > 0){
+        points += auto;
+        updateUI();
+        save();
+    }
+}, 1000);
+
+// NAV
+function goShop(){
+    window.location.href = "index2.html";
+}
+
+function goEvent(){
+    window.location.href = "index3.html";
+}
+
+// STARS
 for(let i=0;i<100;i++){
     let star = document.createElement("div");
     star.className = "star";
@@ -110,6 +163,8 @@ for(let i=0;i<100;i++){
 
     document.getElementById("stars").appendChild(star);
 }
+
+updateUI();
 </script>
 
 </body>
