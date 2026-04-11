@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<title>Generator</title>
+
+<style>
+body {
+    background:#020617;
+    color:cyan;
+    font-family:monospace;
+    text-align:center;
+    padding-top:50px;
+}
+
+.box {
+    background:#0f172a;
+    padding:30px;
+    border-radius:20px;
+    display:inline-block;
+}
+
+button {
+    margin:10px;
+    padding:10px 20px;
+    background:cyan;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+button:hover {
+    background:white;
+}
+
+#output {
+    margin-top:20px;
+    font-size:20px;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="box">
+<h1>⚡ GENERATOR ⚡</h1>
+
+<button onclick="nick()">Nick</button>
+<button onclick="password()">Hasło</button>
+<button onclick="hacker()">Hacker Name 😈</button>
+
+<div id="output">Kliknij przycisk</div>
+</div>
+
+<script>
+
+function random(arr){
+    return arr[Math.floor(Math.random()*arr.length)];
+}
+
+function nick(){
+    let names = ["Shadow","Dark","Ghost","Cyber","Void","Xeno","Blaze"];
+    let nums = Math.floor(Math.random()*999);
+
+    document.getElementById("output").innerText =
+        random(names) + nums;
+}
+
+function password(){
+    let chars = "abcdefghijklmnopqrstuvwxyz123456789!@#$%^&*";
+    let pass = "";
+
+    for(let i=0;i<10;i++){
+        pass += chars[Math.floor(Math.random()*chars.length)];
+    }
+
+    document.getElementById("output").innerText = pass;
+}
+
+function hacker(){
+    let first = ["Zero","Neo","Byte","Hex","Root","Null"];
+    let second = ["Breaker","Hunter","Phantom","Destroyer","Glitch"];
+
+    document.getElementById("output").innerText =
+        random(first) + " " + random(second);
+}
+
+</script>
+
+</body>
+</html>
