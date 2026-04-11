@@ -2,68 +2,92 @@
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
-<title>Galactic Clicker</title>
+<title>Sklep</title>
 
 <style>
 body {
     margin:0;
-    color:cyan;
-    font-family:Arial;
-    text-align:center;
-    user-select:none;
-
-    /* ✨ GWIAZDY BEZ OVERLAYA (NIE BLOKUJĄ) */
     background:
     radial-gradient(white 1px, transparent 1px),
     radial-gradient(white 1px, transparent 1px),
-    #000;
-    
+    black;
+
     background-size:40px 40px, 60px 60px;
     background-position:0 0, 20px 20px;
+
+    animation: moveStars 20s linear infinite;
+
+    color:cyan;
+    font-family:Arial;
+    text-align:center;
 }
 
-/* 🌯 obrazek */
-#clickBtn {
-    width:220px;
+@keyframes moveStars {
+    from {background-position:0 0, 20px 20px;}
+    to {background-position:0 1000px, 20px 1020px;}
+}
+
+/* 💎 box */
+.box {
+    background:#0f172a;
+    margin:20px auto;
+    padding:20px;
+    width:300px;
     border-radius:20px;
+    box-shadow:0 0 20px cyan;
+}
+
+/* 🔘 button */
+button {
+    padding:10px;
+    margin-top:10px;
+    border:none;
+    border-radius:10px;
+    background:cyan;
+    font-weight:bold;
     cursor:pointer;
-    box-shadow:0 0 40px cyan;
-    transition:0.2s;
 }
 
-#clickBtn:active {
-    transform:scale(0.9);
+button:active {
+    transform:scale(0.95);
 }
 
-/* 🔘 sklep */
-.shopBtn {
+.back {
+    margin-top:20px;
     display:inline-block;
-    margin:10px;
-    padding:12px 20px;
+    padding:10px 20px;
     background:cyan;
     border-radius:10px;
-    font-weight:bold;
     text-decoration:none;
     color:black;
-}
-
-.shopBtn:active {
-    transform:scale(0.95);
+    font-weight:bold;
 }
 </style>
 </head>
 
 <body>
 
-<h1>🚀 CLICKER 🚀</h1>
+<h1>💎 SKLEP 💎</h1>
 
-<h2 id="points">0</h2>
+<h2 id="stats">Ładowanie...</h2>
 
-<img src="Klik1.jpg" id="clickBtn">
+<!-- 🔥 KLIK -->
+<div class="box">
+    <h3>⚡ +1 Klik</h3>
+    <p id="clickCost"></p>
+    <button onclick="buyClick()">Kup</button>
+</div>
 
-<br><br>
+<!-- 🔥 AUTO -->
+<div class="box">
+    <h3>🤖 Auto Klik</h3>
+    <p id="autoCost"></p>
+    <button onclick="buyAuto()">Kup</button>
+</div>
 
-<a href="index2.html" class="shopBtn">💎 SKLEP</a>
+<br>
+
+<a href="index.html" class="back">⬅ Powrót</a>
 
 <script>
 
@@ -71,38 +95,56 @@ let points = Number(localStorage.getItem("points")) || 0;
 let clickPower = Number(localStorage.getItem("clickPower")) || 1;
 let auto = Number(localStorage.getItem("auto")) || 0;
 
+/* 💰 rosnące ceny */
+let clickCost = Math.floor(10 * Math.pow(1.5, clickPower-1));
+let autoCost = Math.floor(50 * Math.pow(1.7, auto));
+
 function update(){
-    document.getElementById("points").innerText =
+    document.getElementById("stats").innerText =
         "⚡ " + points + " | Klik: " + clickPower + " | Auto: " + auto;
+
+    document.getElementById("clickCost").innerText =
+        "Koszt: " + clickCost;
+
+    document.getElementById("autoCost").innerText =
+        "Koszt: " + autoCost;
 }
 
 function save(){
     localStorage.setItem("points", points);
     localStorage.setItem("clickPower", clickPower);
     localStorage.setItem("auto", auto);
-    update();
 }
 
-function click(){
-    points += clickPower;
-    save();
-}
+/* 💥 kup klik */
+function buyClick(){
+    if(points >= clickCost){
+        points -= clickCost;
+        clickPower++;
 
-document.getElementById("clickBtn").onclick = click;
+        clickCost = Math.floor(10 * Math.pow(1.5, clickPower-1));
 
-document.addEventListener("keydown", (e)=>{
-    if(e.code === "Space"){
-        e.preventDefault();
-        click();
-    }
-});
-
-setInterval(()=>{
-    if(auto > 0){
-        points += auto;
         save();
+        update();
+    } else {
+        alert("Za mało punktów!");
     }
-},1000);
+}
+
+/* 🤖 kup auto */
+function buyAuto(){
+    if(points >= autoCost){
+        points -= autoCost;
+        auto++;
+
+        autoCost = Math.floor(50 * Math.pow(1.7, auto));
+
+        save();
+        update();
+    } else {
+        alert("Za mało punktów!");
+    }
+}
 
 update();
 
