@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<title>Quiz</title>
+
+<style>
+body {
+    background:black;
+    color:lime;
+    font-family:monospace;
+    text-align:center;
+    padding-top:50px;
+}
+
+button {
+    display:block;
+    margin:10px auto;
+    padding:10px;
+    width:200px;
+}
+</style>
+
+</head>
+
+<body>
+
+<h1>🧠 QUIZ</h1>
+
+<div id="question"></div>
+<div id="answers"></div>
+
+<script>
+
+let quiz = [
+{
+q: "Najlepsza gra?",
+a: ["Roblox","Minecraft","Fortnite"],
+c: 0
+},
+{
+q: "Co robi hacker?",
+a: ["Gotuje","Programuje","Śpi"],
+c: 1
+}
+];
+
+let i = 0;
+let score = 0;
+
+function load(){
+    let q = quiz[i];
+    document.getElementById("question").innerText = q.q;
+
+    let html = "";
+    q.a.forEach((ans, index)=>{
+        html += `<button onclick="answer(${index})">${ans}</button>`;
+    });
+
+    document.getElementById("answers").innerHTML = html;
+}
+
+function answer(x){
+    if(x === quiz[i].c) score++;
+
+    i++;
+
+    if(i < quiz.length){
+        load();
+    } else {
+        document.body.innerHTML = `<h1>Twój wynik: ${score}/${quiz.length}</h1>`;
+    }
+}
+
+load();
+
+</script>
+
+</body>
+</html>
