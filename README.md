@@ -1,4 +1,4 @@
-<img width="478" height="421" alt="image" src="https://github.com/user-attachments/assets/f7f038a4-f2ad-46e4-9840-b45740f05d8d" /># wojtek-ux.github.io/
+# wojtek-ux.github.io/
 Welcome in my project
 
 
