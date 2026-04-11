@@ -2,122 +2,147 @@
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
-<title>Cosmic Clicker</title>
+<title>Klikacz Kosmiczny</title>
 
 <style>
 body {
     margin:0;
-    overflow:hidden;
-    background: radial-gradient(circle, #020617, #000000);
-    font-family: Arial;
+    font-family:Orbitron, monospace;
+    background: radial-gradient(circle at center, #020617, #000);
+    color:#00ffff;
     text-align:center;
-    color:white;
+    overflow:hidden;
 }
 
-h1 { font-size:40px; text-shadow:0 0 15px cyan; }
+/* ✨ TŁO GWIAZD */
+body::before {
+    content:"";
+    position:fixed;
+    width:200%;
+    height:200%;
+    background: repeating-radial-gradient(circle, white 0px, transparent 2px);
+    animation: stars 60s linear infinite;
+    opacity:0.2;
+}
 
-#stats { color:cyan; }
+@keyframes stars {
+    from {transform: translate(0,0);}
+    to {transform: translate(-500px,-500px);}
+}
 
-img {
-    width:220px;
+/* 🔥 GLOW */
+h1 {
+    font-size:40px;
+    text-shadow:0 0 20px cyan, 0 0 40px blue;
+}
+
+#points {
+    font-size:25px;
+    margin:20px;
+}
+
+/* 💎 PRZYCISK */
+#clickBtn {
+    width:200px;
+    height:200px;
+    border-radius:50%;
+    background:linear-gradient(45deg, cyan, blue);
+    border:none;
+    font-size:20px;
     cursor:pointer;
-    filter: drop-shadow(0 0 20px cyan);
+    box-shadow:0 0 30px cyan;
+    transition:0.2s;
 }
 
+#clickBtn:hover {
+    transform:scale(1.1);
+    box-shadow:0 0 60px cyan;
+}
+
+/* 🚀 MENU */
 button {
     margin:10px;
     padding:10px;
     border:none;
     border-radius:10px;
     background:cyan;
+    font-weight:bold;
     cursor:pointer;
+}
+
+button:hover {
+    background:white;
 }
 </style>
 </head>
 
 <body>
 
-<h1 id="points"></h1>
-<div id="stats"></div>
+<h1>🚀 GALACTIC CLICKER 🚀</h1>
 
-<img src="Klik1.jpg" onclick="addPoint(event)">
+<h2 id="points">0</h2>
 
-<br>
-<button onclick="location.href='index2.html'">💎 Sklep</button>
-<button onclick="location.href='index3.html'">👾 Event</button>
+<button id="clickBtn">CLICK</button>
+
+<br><br>
+
+<button onclick="goShop()">💎 Sklep</button>
+<button onclick="reset()">💀 Reset</button>
 
 <script>
 
-let points = parseInt(localStorage.getItem("points") || 0);
-let clickPower = parseInt(localStorage.getItem("clickPower") || 1);
-let auto = parseInt(localStorage.getItem("auto") || 0);
-let rebirths = parseInt(localStorage.getItem("rebirths") || 0);
+let points = Number(localStorage.getItem("points")) || 0;
+let clickPower = Number(localStorage.getItem("clickPower")) || 1;
+let auto = Number(localStorage.getItem("auto")) || 0;
 
-// 🔥 COMBO
-let combo = 0;
-let lastClick = 0;
-
-function getMultiplier(){
-    if(combo >= 20) return 5;
-    if(combo >= 10) return 3;
-    if(combo >= 5) return 2;
-    return 1;
-}
-
-function updateUI(){
-    document.getElementById("points").innerText = "⚡ " + points + " ⚡";
-    document.getElementById("stats").innerText =
-        "Klik: +" + clickPower +
-        " | Auto: " + auto +
-        " | 💀 Rebirthy: " + rebirths +
-        " | Combo: " + combo;
-}
-
-function addPoint(e){
-    let now = Date.now();
-
-    if(now - lastClick < 300) combo++;
-    else combo = 0;
-
-    lastClick = now;
-
-    let gain = (clickPower + rebirths) * getMultiplier();
-    points += gain;
-
-    updateUI();
-    save();
+function update(){
+    document.getElementById("points").innerText = "Punkty: " + points;
 }
 
 function save(){
     localStorage.setItem("points", points);
+    localStorage.setItem("clickPower", clickPower);
+    localStorage.setItem("auto", auto);
+    update();
 }
 
-// SPACE CLICK
-document.addEventListener("keydown", e=>{
+/* 🖱️ klik */
+document.getElementById("clickBtn").onclick = () => {
+    points += clickPower;
+    save();
+};
+
+/* ⌨️ SPACJA = klik */
+document.addEventListener("keydown", (e) => {
     if(e.code === "Space"){
         e.preventDefault();
-        addPoint({clientX:0, clientY:0});
+        points += clickPower;
+        save();
     }
 });
 
-// AUTO
-setInterval(()=>{
+/* ⚡ auto klik */
+setInterval(() => {
     if(auto > 0){
-        points += auto + rebirths;
-        updateUI();
+        points += auto;
         save();
     }
-},1000);
+}, 1000);
 
-// BONUS
-setInterval(()=>{
-    let bonus = Math.floor(Math.random()*10)+10;
-    points += bonus;
-    updateUI();
-    save();
-},10000);
+/* 🔙 sklep */
+function goShop(){
+    window.location.href = "index2.html";
+}
 
-updateUI();
+/* 💀 reset */
+function reset(){
+    if(confirm("Na pewno?")){
+        localStorage.clear();
+        location.reload();
+    }
+}
+
+update();
 
 </script>
 
