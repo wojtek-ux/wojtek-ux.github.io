@@ -10,7 +10,8 @@ body {
     font-family:monospace;
     margin:0;
     padding:20px;
-    transition:0.1s;
+    overflow:hidden;
+    transition:0.2s;
 }
 
 #terminal {
@@ -39,6 +40,20 @@ input {
     75% { transform: translate(-1px, -1px); }
     100% { transform: translate(0,0); }
 }
+
+#crash {
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:black;
+    color:red;
+    font-size:30px;
+    text-align:center;
+    padding-top:20%;
+}
 </style>
 
 </head>
@@ -52,6 +67,8 @@ input {
 
 <input id="input" placeholder="Wpisz komendę..." onkeydown="enter(event)">
 
+<div id="crash">💀 SYSTEM FAILURE 💀</div>
+
 <audio id="beep">
     <source src="https://www.soundjay.com/buttons/sounds/beep-07.mp3">
 </audio>
@@ -60,6 +77,8 @@ input {
 let name = localStorage.getItem("user") || "unknown";
 let term = document.getElementById("terminal");
 let beep = document.getElementById("beep");
+
+let waitingKillConfirm = false;
 
 term.innerHTML += "Welcome " + name + "\n";
 term.innerHTML += "Type 'help' to see commands\n\n";
@@ -87,9 +106,33 @@ function enter(e) {
 
 function handle(cmd) {
 
+    // 🔴 KILL CONFIRM
+    if(waitingKillConfirm) {
+        if(cmd === "y") {
+            term.innerHTML += "Shutting down system...\n";
+            playSound();
+
+            setTimeout(() => {
+                document.body.innerHTML = "";
+                document.body.style.background = "black";
+            }, 1000);
+
+            setTimeout(() => {
+                document.body.innerHTML = "<div id='crash'>💀 SYSTEM FAILURE 💀</div>";
+                document.getElementById("crash").style.display = "block";
+            }, 2000);
+        }
+        else {
+            term.innerHTML += "Canceled.\n\n";
+        }
+
+        waitingKillConfirm = false;
+        return;
+    }
+
     if(cmd === "help") {
         term.innerHTML += "Commands:\n";
-        term.innerHTML += "hack\nscan\nwhoami\nclear\nidiot\n\n";
+        term.innerHTML += "hack\nscan\nwhoami\nclear\nidiot\nkill_system\n\n";
     }
 
     else if(cmd === "whoami") {
@@ -152,6 +195,11 @@ function handle(cmd) {
         }
 
         term.innerHTML += "\n";
+    }
+
+    else if(cmd === "kill_system") {
+        term.innerHTML += "Are you sure? (y/n)\n";
+        waitingKillConfirm = true;
     }
 
     else {
