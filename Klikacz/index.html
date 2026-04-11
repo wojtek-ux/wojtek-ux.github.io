@@ -7,40 +7,31 @@
 <style>
 body {
     margin:0;
-    background:black;
     color:cyan;
     font-family:Arial;
     text-align:center;
     user-select:none;
     overflow:hidden;
+
+    /* 🌌 GWIAZDY */
+    background:
+    radial-gradient(white 1px, transparent 1px),
+    radial-gradient(white 1px, transparent 1px),
+    black;
+
+    background-size:40px 40px, 60px 60px;
+    background-position:0 0, 20px 20px;
+
+    animation: moveStars 20s linear infinite;
 }
 
-/* 🔥 KROPKI (GWIAZDY) */
-.stars {
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    pointer-events:none; /* 💀 NIE BLOKUJE */
-    z-index:0;
-}
-
-.star {
-    position:absolute;
-    width:2px;
-    height:2px;
-    background:white;
-    opacity:0.8;
-    animation: move linear infinite;
-}
-
-@keyframes move {
+/* 🔥 animacja tła */
+@keyframes moveStars {
     from {
-        transform: translateY(0);
+        background-position:0 0, 20px 20px;
     }
     to {
-        transform: translateY(100vh);
+        background-position:0 1000px, 20px 1020px;
     }
 }
 
@@ -50,8 +41,11 @@ body {
     border-radius:20px;
     cursor:pointer;
     box-shadow:0 0 40px cyan;
-    position:relative;
-    z-index:1;
+    transition:0.2s;
+}
+
+#clickBtn:active {
+    transform:scale(0.9);
 }
 
 /* 🔘 sklep */
@@ -64,21 +58,15 @@ body {
     text-decoration:none;
     color:black;
     font-weight:bold;
-    position:relative;
-    z-index:1;
 }
 
-h1, h2 {
-    position:relative;
-    z-index:1;
+.shopBtn:active {
+    transform:scale(0.95);
 }
 </style>
 </head>
 
 <body>
-
-<!-- 🔥 GWIAZDY -->
-<div class="stars" id="stars"></div>
 
 <h1>🚀 CLICKER 🚀</h1>
 
@@ -92,19 +80,6 @@ h1, h2 {
 
 <script>
 
-/* ⭐ generowanie gwiazd */
-for(let i=0;i<120;i++){
-    let star = document.createElement("div");
-    star.className = "star";
-
-    star.style.left = Math.random()*100 + "%";
-    star.style.top = Math.random()*100 + "%";
-    star.style.animationDuration = (Math.random()*5+5)+"s";
-
-    document.getElementById("stars").appendChild(star);
-}
-
-/* dane */
 let points = Number(localStorage.getItem("points")) || 0;
 let clickPower = Number(localStorage.getItem("clickPower")) || 1;
 let auto = Number(localStorage.getItem("auto")) || 0;
