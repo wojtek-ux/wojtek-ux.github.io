@@ -7,33 +7,19 @@
 <style>
 body {
     margin:0;
-    background: radial-gradient(circle, #020617, #000);
     color:cyan;
     font-family:Arial;
     text-align:center;
     user-select:none;
-}
 
-/* 🔥 GWIAZDY (NAPRAWIONE NA STAŁE) */
-body::before {
-    content:"";
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background: radial-gradient(white 1px, transparent 1px);
-    background-size:40px 40px;
-    animation: stars 40s linear infinite;
-    opacity:0.15;
-
-    pointer-events:none; /* 💀 NAJWAŻNIEJSZE */
-    z-index:-1; /* 🔥 jeszcze lepiej */
-}
-
-@keyframes stars {
-    from {transform:translate(0,0);}
-    to {transform:translate(-400px,-400px);}
+    /* ✨ GWIAZDY BEZ OVERLAYA (NIE BLOKUJĄ) */
+    background:
+    radial-gradient(white 1px, transparent 1px),
+    radial-gradient(white 1px, transparent 1px),
+    #000;
+    
+    background-size:40px 40px, 60px 60px;
+    background-position:0 0, 20px 20px;
 }
 
 /* 🌯 obrazek */
