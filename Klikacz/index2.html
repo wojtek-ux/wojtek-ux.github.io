@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Sklep</title>
+
+<style>
+body {
+    background:black;
+    color:cyan;
+    font-family:monospace;
+    text-align:center;
+    padding-top:50px;
+}
+
+button {
+    padding:10px;
+    margin:10px;
+    background:cyan;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<h1>💎 SKLEP 💎</h1>
+<h2 id="points"></h2>
+
+<button onclick="buyClick()">Upgrade klik (+1)</button>
+<button onclick="buyAuto()">Auto klik (1/s)</button>
+
+<br><br>
+<button onclick="goBack()">⬅ Powrót</button>
+
+<script>
+let points = localStorage.getItem("points") || 0;
+let clickPower = localStorage.getItem("clickPower") || 1;
+let auto = localStorage.getItem("auto") || 0;
+
+function update(){
+    document.getElementById("points").innerText = "Punkty: " + points;
+}
+
+function buyClick(){
+    if(points >= 10){
+        points -= 10;
+        clickPower++;
+        localStorage.setItem("clickPower", clickPower);
+    }
+    save();
+}
+
+function buyAuto(){
+    if(points >= 50){
+        points -= 50;
+        auto++;
+        localStorage.setItem("auto", auto);
+    }
+    save();
+}
+
+function save(){
+    localStorage.setItem("points", points);
+    update();
+}
+
+function goBack(){
+    window.location.href = "index.html";
+}
+
+update();
+</script>
+
+</body>
+</html>
