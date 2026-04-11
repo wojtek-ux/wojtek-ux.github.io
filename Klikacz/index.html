@@ -14,33 +14,14 @@ body {
     color:white;
 }
 
-h1 {
-    margin-top:20px;
-    font-size:40px;
-    text-shadow: 0 0 15px cyan;
-}
+h1 { font-size:40px; text-shadow:0 0 15px cyan; }
 
-#stats {
-    color:cyan;
-}
+#stats { color:cyan; }
 
 img {
     width:220px;
-    margin-top:50px;
     cursor:pointer;
     filter: drop-shadow(0 0 20px cyan);
-}
-
-.plus {
-    position:absolute;
-    color:cyan;
-    font-size:25px;
-    animation: floatUp 1s forwards;
-}
-
-@keyframes floatUp {
-    0% { opacity:1; transform:translateY(0); }
-    100% { opacity:0; transform:translateY(-80px); }
 }
 
 button {
@@ -56,7 +37,7 @@ button {
 
 <body>
 
-<h1 id="points">⚡ 0 ⚡</h1>
+<h1 id="points"></h1>
 <div id="stats"></div>
 
 <img src="Klik1.jpg" onclick="addPoint(event)">
@@ -70,7 +51,9 @@ button {
 let points = parseInt(localStorage.getItem("points") || 0);
 let clickPower = parseInt(localStorage.getItem("clickPower") || 1);
 let auto = parseInt(localStorage.getItem("auto") || 0);
+let rebirths = parseInt(localStorage.getItem("rebirths") || 0);
 
+// 🔥 COMBO
 let combo = 0;
 let lastClick = 0;
 
@@ -84,65 +67,51 @@ function getMultiplier(){
 function updateUI(){
     document.getElementById("points").innerText = "⚡ " + points + " ⚡";
     document.getElementById("stats").innerText =
-        "Klik: +" + clickPower + " | Auto: " + auto + "/s | Combo: " + combo;
+        "Klik: +" + clickPower +
+        " | Auto: " + auto +
+        " | 💀 Rebirthy: " + rebirths +
+        " | Combo: " + combo;
 }
 
 function addPoint(e){
     let now = Date.now();
 
-    if(now - lastClick < 300){
-        combo++;
-    } else {
-        combo = 0;
-    }
+    if(now - lastClick < 300) combo++;
+    else combo = 0;
 
     lastClick = now;
 
-    let gain = clickPower * getMultiplier();
+    let gain = (clickPower + rebirths) * getMultiplier();
     points += gain;
 
     updateUI();
     save();
-
-    let plus = document.createElement("div");
-    plus.innerText = "+" + gain;
-    plus.className = "plus";
-
-    plus.style.left = (e.clientX || window.innerWidth/2) + "px";
-    plus.style.top = (e.clientY || window.innerHeight/2) + "px";
-
-    document.body.appendChild(plus);
-    setTimeout(() => plus.remove(), 1000);
 }
 
 function save(){
     localStorage.setItem("points", points);
 }
 
-// SPACE = CLICK
-document.addEventListener("keydown", function(e){
+// SPACE CLICK
+document.addEventListener("keydown", e=>{
     if(e.code === "Space"){
         e.preventDefault();
-
-        addPoint({
-            clientX: window.innerWidth/2,
-            clientY: window.innerHeight/2
-        });
+        addPoint({clientX:0, clientY:0});
     }
 });
 
-// AUTO CLICK
+// AUTO
 setInterval(()=>{
     if(auto > 0){
-        points += auto;
+        points += auto + rebirths;
         updateUI();
         save();
     }
 },1000);
 
-// RANDOM BONUS
+// BONUS
 setInterval(()=>{
-    let bonus = Math.floor(Math.random()*5)+5;
+    let bonus = Math.floor(Math.random()*10)+10;
     points += bonus;
     updateUI();
     save();
