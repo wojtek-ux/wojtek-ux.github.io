@@ -2,38 +2,50 @@
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
-<title>Klikacz Kosmiczny</title>
+<title>GALACTIC CHAOS</title>
 
 <style>
 body {
     margin:0;
-    font-family:Orbitron, monospace;
-    background: radial-gradient(circle at center, #020617, #000);
-    color:#00ffff;
+    background:black;
+    color:lime;
+    font-family:monospace;
     text-align:center;
     overflow:hidden;
 }
 
-/* ✨ TŁO GWIAZD */
+/* 🌌 glitch tło */
 body::before {
     content:"";
     position:fixed;
     width:200%;
     height:200%;
-    background: repeating-radial-gradient(circle, white 0px, transparent 2px);
-    animation: stars 60s linear infinite;
-    opacity:0.2;
+    background: repeating-linear-gradient(
+        0deg,
+        rgba(0,255,0,0.05) 0px,
+        rgba(0,255,0,0.05) 2px,
+        transparent 2px,
+        transparent 4px
+    );
+    animation: glitchbg 0.2s infinite;
 }
 
-@keyframes stars {
-    from {transform: translate(0,0);}
-    to {transform: translate(-500px,-500px);}
+@keyframes glitchbg {
+    0% { transform:translate(0,0); }
+    50% { transform:translate(5px,-5px); }
+    100% { transform:translate(0,0); }
 }
 
-/* 🔥 GLOW */
+/* 🔥 GLITCH TEXT */
 h1 {
     font-size:40px;
-    text-shadow:0 0 20px cyan, 0 0 40px blue;
+    animation: glitch 0.3s infinite;
+}
+
+@keyframes glitch {
+    0% { text-shadow: 2px 0 red, -2px 0 blue; }
+    50% { text-shadow: -2px 0 red, 2px 0 blue; }
+    100% { text-shadow: 2px 0 red, -2px 0 blue; }
 }
 
 #points {
@@ -41,105 +53,109 @@ h1 {
     margin:20px;
 }
 
-/* 💎 PRZYCISK */
-#clickBtn {
+/* 💥 KEBAB */
+#kebab {
     width:200px;
-    height:200px;
-    border-radius:50%;
-    background:linear-gradient(45deg, cyan, blue);
-    border:none;
-    font-size:20px;
     cursor:pointer;
-    box-shadow:0 0 30px cyan;
-    transition:0.2s;
+    filter: drop-shadow(0 0 30px lime);
+    transition:0.1s;
 }
 
-#clickBtn:hover {
-    transform:scale(1.1);
-    box-shadow:0 0 60px cyan;
+#kebab:active {
+    transform:scale(0.9) rotate(10deg);
 }
 
-/* 🚀 MENU */
+/* ⚡ przyciski */
 button {
     margin:10px;
     padding:10px;
-    border:none;
-    border-radius:10px;
-    background:cyan;
-    font-weight:bold;
+    background:black;
+    color:lime;
+    border:1px solid lime;
     cursor:pointer;
 }
 
 button:hover {
-    background:white;
+    background:lime;
+    color:black;
+}
+
+/* 💀 glitch popup */
+.glitch {
+    position:absolute;
+    color:red;
+    font-size:30px;
+    animation: spam 0.3s infinite;
+}
+
+@keyframes spam {
+    0% { transform:translate(0,0); }
+    50% { transform:translate(10px,-10px); }
+    100% { transform:translate(0,0); }
 }
 </style>
 </head>
 
 <body>
 
-<h1>🚀 GALACTIC CLICKER 🚀</h1>
+<h1>💀 SYSTEM CHAOS 💀</h1>
 
 <h2 id="points">0</h2>
 
-<button id="clickBtn">CLICK</button>
+<img src="Klik1.jpg" id="kebab">
 
 <br><br>
 
-<button onclick="goShop()">💎 Sklep</button>
-<button onclick="reset()">💀 Reset</button>
+<button onclick="goShop()">💎 SKLEP</button>
 
 <script>
 
 let points = Number(localStorage.getItem("points")) || 0;
 let clickPower = Number(localStorage.getItem("clickPower")) || 1;
-let auto = Number(localStorage.getItem("auto")) || 0;
 
+/* update */
 function update(){
     document.getElementById("points").innerText = "Punkty: " + points;
 }
 
+/* save */
 function save(){
     localStorage.setItem("points", points);
     localStorage.setItem("clickPower", clickPower);
-    localStorage.setItem("auto", auto);
     update();
 }
 
-/* 🖱️ klik */
-document.getElementById("clickBtn").onclick = () => {
-    points += clickPower;
-    save();
+/* klik */
+document.getElementById("kebab").onclick = () => {
+    click();
 };
 
-/* ⌨️ SPACJA = klik */
-document.addEventListener("keydown", (e) => {
+/* SPACJA = klik */
+document.addEventListener("keydown", (e)=>{
     if(e.code === "Space"){
         e.preventDefault();
-        points += clickPower;
-        save();
+        click();
     }
 });
 
-/* ⚡ auto klik */
-setInterval(() => {
-    if(auto > 0){
-        points += auto;
-        save();
-    }
-}, 1000);
+function click(){
+    points += clickPower;
+    save();
 
-/* 🔙 sklep */
-function goShop(){
-    window.location.href = "index2.html";
+    // 💥 efekt glitch
+    let el = document.createElement("div");
+    el.className = "glitch";
+    el.innerText = "+1";
+    el.style.left = Math.random()*window.innerWidth + "px";
+    el.style.top = Math.random()*window.innerHeight + "px";
+    document.body.appendChild(el);
+
+    setTimeout(()=> el.remove(), 500);
 }
 
-/* 💀 reset */
-function reset(){
-    if(confirm("Na pewno?")){
-        localStorage.clear();
-        location.reload();
-    }
+/* sklep */
+function goShop(){
+    window.location.href = "index2.html";
 }
 
 update();
