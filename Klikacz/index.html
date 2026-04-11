@@ -2,7 +2,7 @@
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
-<title>GALACTIC CLICKER</title>
+<title>Galactic Clicker</title>
 
 <style>
 body {
@@ -31,7 +31,7 @@ body::before {
     to {transform:translate(-400px,-400px);}
 }
 
-/* 🔥 neon title */
+/* 🔥 tytuł */
 h1 {
     text-shadow:0 0 15px cyan, 0 0 40px blue;
 }
@@ -42,7 +42,7 @@ h1 {
     margin:20px;
 }
 
-/* 💥 przycisk (już nie oślepia) */
+/* 💥 przycisk */
 #clickBtn {
     width:180px;
     height:180px;
@@ -86,24 +86,29 @@ button:hover {
 
 <h1>🚀 GALACTIC CLICKER 🚀</h1>
 
-<h2 id="points">0</h2>
+<h2 id="points">Ładowanie...</h2>
 
 <button id="clickBtn">CLICK</button>
 
 <br><br>
 
 <button onclick="goShop()">💎 Sklep</button>
+<button onclick="reset()">💀 Reset</button>
 
 <script>
 
+/* 🔥 dane */
 let points = Number(localStorage.getItem("points")) || 0;
 let clickPower = Number(localStorage.getItem("clickPower")) || 1;
 let auto = Number(localStorage.getItem("auto")) || 0;
 
+/* update UI */
 function update(){
-    document.getElementById("points").innerText = "Punkty: " + points;
+    document.getElementById("points").innerText =
+        "⚡ " + points + " | Klik: " + clickPower + " | Auto: " + auto;
 }
 
+/* zapis */
 function save(){
     localStorage.setItem("points", points);
     localStorage.setItem("clickPower", clickPower);
@@ -111,12 +116,28 @@ function save(){
     update();
 }
 
-/* klik */
-document.getElementById("clickBtn").onclick = () => {
-    click();
-};
+/* 🖱️ klik */
+function click(){
+    points += clickPower;
+    save();
 
-/* SPACJA */
+    // efekt +1
+    let el = document.createElement("div");
+    el.innerText = "+" + clickPower;
+    el.style.position = "absolute";
+    el.style.left = (window.innerWidth/2 + Math.random()*100-50)+"px";
+    el.style.top = (window.innerHeight/2 + Math.random()*100-50)+"px";
+    el.style.color = "cyan";
+    el.style.fontSize = "20px";
+    document.body.appendChild(el);
+
+    setTimeout(()=>el.remove(), 400);
+}
+
+/* klik przyciskiem */
+document.getElementById("clickBtn").onclick = click;
+
+/* ⌨️ SPACJA */
 document.addEventListener("keydown", (e)=>{
     if(e.code === "Space"){
         e.preventDefault();
@@ -124,35 +145,28 @@ document.addEventListener("keydown", (e)=>{
     }
 });
 
-function click(){
-    points += clickPower;
-    save();
-
-    // 🔥 mały efekt (nie rozwala strony)
-    let el = document.createElement("div");
-    el.innerText = "+1";
-    el.style.position = "absolute";
-    el.style.left = (window.innerWidth/2 + Math.random()*100-50)+"px";
-    el.style.top = (window.innerHeight/2 + Math.random()*100-50)+"px";
-    el.style.color = "cyan";
-    document.body.appendChild(el);
-
-    setTimeout(()=>el.remove(), 400);
-}
-
-/* auto */
+/* ⚡ AUTO KLIK */
 setInterval(()=>{
-    if(auto>0){
+    if(auto > 0){
         points += auto;
         save();
     }
-},1000);
+}, 1000);
 
-/* sklep */
+/* 🛒 sklep */
 function goShop(){
-    window.location.href="index2.html";
+    window.location.href = "index2.html";
 }
 
+/* 💀 reset */
+function reset(){
+    if(confirm("Na pewno chcesz reset?")){
+        localStorage.clear();
+        location.reload();
+    }
+}
+
+/* start */
 update();
 
 </script>
