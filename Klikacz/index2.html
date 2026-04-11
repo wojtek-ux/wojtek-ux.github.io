@@ -32,8 +32,7 @@ button:hover {
 <body>
 
 <h1>💎 Sklep 💎</h1>
-
-<h2 id="points">Ładowanie...</h2>
+<h2 id="points">0</h2>
 
 <button onclick="buyClick()">+1 klik (10)</button>
 <button onclick="buyAuto()">Auto klik (50)</button>
@@ -44,19 +43,16 @@ button:hover {
 
 <script>
 
-// 🔢 dane
 let points = Number(localStorage.getItem("points")) || 0;
 let clickPower = Number(localStorage.getItem("clickPower")) || 1;
 let auto = Number(localStorage.getItem("auto")) || 0;
 let rebirths = Number(localStorage.getItem("rebirths")) || 0;
 
-// 🔄 update
 function update(){
     document.getElementById("points").innerText =
         "Punkty: " + points + " | 💀 Rebirthy: " + rebirths;
 }
 
-// 💾 zapis
 function save(){
     localStorage.setItem("points", points);
     localStorage.setItem("clickPower", clickPower);
@@ -65,33 +61,29 @@ function save(){
     update();
 }
 
-// 🔼 upgrade klik
 function buyClick(){
     if(points >= 10){
         points -= 10;
         clickPower++;
         save();
     } else {
-        alert("❌ Za mało punktów!");
+        alert("Za mało punktów!");
     }
 }
 
-// ⚡ auto klik
 function buyAuto(){
     if(points >= 50){
         points -= 50;
         auto++;
         save();
     } else {
-        alert("❌ Za mało punktów!");
+        alert("Za mało punktów!");
     }
 }
 
-// 💀 rebirth
 function rebirth(){
     if(points >= 1000000){
         rebirths++;
-
         alert("💀 REBIRTH x" + rebirths);
 
         points = 0;
@@ -100,16 +92,14 @@ function rebirth(){
 
         save();
     } else {
-        alert("❌ Potrzebujesz 1,000,000 punktów!");
+        alert("Potrzebujesz 1,000,000!");
     }
 }
 
-// 🔙 powrót
 function back(){
     window.location.href = "index.html";
 }
 
-// start
 update();
 
 </script>
