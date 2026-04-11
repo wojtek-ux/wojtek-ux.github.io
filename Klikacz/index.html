@@ -42,27 +42,21 @@ h1 {
     margin:20px;
 }
 
-/* 💥 przycisk */
+/* 🌯 OBRAZEK */
 #clickBtn {
-    width:180px;
-    height:180px;
-    border-radius:50%;
-    background:linear-gradient(45deg, #00ffff, #0044ff);
-    border:none;
-    color:white;
-    font-size:18px;
+    width:220px;
+    border-radius:20px;
     cursor:pointer;
-    box-shadow:0 0 25px cyan;
+    box-shadow:0 0 40px cyan, 0 0 80px blue;
     transition:0.2s;
 }
 
 #clickBtn:hover {
     transform:scale(1.1);
-    box-shadow:0 0 50px cyan;
 }
 
 #clickBtn:active {
-    transform:scale(0.9);
+    transform:scale(0.9) rotate(5deg);
 }
 
 /* ⚡ przyciski */
@@ -88,6 +82,7 @@ button:hover {
 
 <h2 id="points">Ładowanie...</h2>
 
+<!-- 🌯 TWÓJ OBRAZEK -->
 <img src="Klik1.jpg" id="clickBtn">
 
 <br><br>
@@ -97,18 +92,18 @@ button:hover {
 
 <script>
 
-/* 🔥 dane */
+/* dane */
 let points = Number(localStorage.getItem("points")) || 0;
 let clickPower = Number(localStorage.getItem("clickPower")) || 1;
 let auto = Number(localStorage.getItem("auto")) || 0;
 
-/* update UI */
+/* update */
 function update(){
     document.getElementById("points").innerText =
         "⚡ " + points + " | Klik: " + clickPower + " | Auto: " + auto;
 }
 
-/* zapis */
+/* save */
 function save(){
     localStorage.setItem("points", points);
     localStorage.setItem("clickPower", clickPower);
@@ -116,17 +111,17 @@ function save(){
     update();
 }
 
-/* 🖱️ klik */
+/* klik */
 function click(){
     points += clickPower;
     save();
 
-    // efekt +1
+    // efekt +punkty
     let el = document.createElement("div");
     el.innerText = "+" + clickPower;
     el.style.position = "absolute";
-    el.style.left = (window.innerWidth/2 + Math.random()*100-50)+"px";
-    el.style.top = (window.innerHeight/2 + Math.random()*100-50)+"px";
+    el.style.left = (window.innerWidth/2 + Math.random()*120-60)+"px";
+    el.style.top = (window.innerHeight/2 + Math.random()*120-60)+"px";
     el.style.color = "cyan";
     el.style.fontSize = "20px";
     document.body.appendChild(el);
@@ -134,10 +129,10 @@ function click(){
     setTimeout(()=>el.remove(), 400);
 }
 
-/* klik przyciskiem */
+/* klik myszką */
 document.getElementById("clickBtn").onclick = click;
 
-/* ⌨️ SPACJA */
+/* SPACJA */
 document.addEventListener("keydown", (e)=>{
     if(e.code === "Space"){
         e.preventDefault();
@@ -145,7 +140,7 @@ document.addEventListener("keydown", (e)=>{
     }
 });
 
-/* ⚡ AUTO KLIK */
+/* AUTO KLIK */
 setInterval(()=>{
     if(auto > 0){
         points += auto;
@@ -153,14 +148,14 @@ setInterval(()=>{
     }
 }, 1000);
 
-/* 🛒 sklep */
+/* sklep */
 function goShop(){
     window.location.href = "index2.html";
 }
 
-/* 💀 reset */
+/* reset */
 function reset(){
-    if(confirm("Na pewno chcesz reset?")){
+    if(confirm("Na pewno?")){
         localStorage.clear();
         location.reload();
     }
