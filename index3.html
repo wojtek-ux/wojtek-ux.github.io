@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Terminal</title>
+
+<style>
+body {
+    background:black;
+    color:lime;
+    font-family:monospace;
+    margin:0;
+    padding:20px;
+}
+
+#terminal {
+    white-space: pre-line;
+}
+
+input {
+    width:100%;
+    padding:10px;
+    background:black;
+    color:lime;
+    border:1px solid lime;
+    font-family:monospace;
+}
+</style>
+
+</head>
+
+<body>
+
+<h2>💻 HACKER TERMINAL</h2>
+
+<div id="terminal"></div>
+<br>
+
+<input id="input" placeholder="Wpisz komendę..." onkeydown="enter(event)">
+
+<script>
+let name = localStorage.getItem("user") || "unknown";
+let term = document.getElementById("terminal");
+
+term.innerHTML += "Welcome " + name + "\n";
+term.innerHTML += "Type 'help' to see commands\n\n";
+
+function enter(e) {
+    if(e.key === "Enter") {
+        let input = document.getElementById("input");
+        let cmd = input.value;
+
+        term.innerHTML += "> " + cmd + "\n";
+
+        handle(cmd.toLowerCase());
+
+        input.value = "";
+    }
+}
+
+function handle(cmd) {
+
+    if(cmd === "help") {
+        term.innerHTML += "Commands:\n";
+        term.innerHTML += "hack\nscan\nwhoami\nclear\n\n";
+    }
+
+    else if(cmd === "whoami") {
+        term.innerHTML += name + "\n\n";
+    }
+
+    else if(cmd === "clear") {
+        term.innerHTML = "";
+    }
+
+    else if(cmd === "scan") {
+        term.innerHTML += "Scanning network...\n";
+        setTimeout(() => {
+            term.innerHTML += "IP found: 192.168.0.1\n";
+        }, 500);
+        setTimeout(() => {
+            term.innerHTML += "Open ports: 22, 80, 443\n\n";
+        }, 1000);
+    }
+
+    else if(cmd === "hack") {
+        term.innerHTML += "Bypassing firewall...\n";
+        setTimeout(() => {
+            term.innerHTML += "Injecting code...\n";
+        }, 500);
+        setTimeout(() => {
+            term.innerHTML += "ACCESS GRANTED 😈\n\n";
+        }, 1200);
+    }
+
+    else {
+        term.innerHTML += "Unknown command\n\n";
+    }
+}
+</script>
+
+</body>
+</html>
