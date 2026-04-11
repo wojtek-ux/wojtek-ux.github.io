@@ -9,9 +9,8 @@ body {
     margin:0;
     background: radial-gradient(circle, #020617, #000);
     color:cyan;
-    font-family:Orbitron, monospace;
+    font-family:Arial;
     text-align:center;
-    overflow:hidden;
 }
 
 /* ✨ gwiazdy */
@@ -31,23 +30,12 @@ body::before {
     to {transform:translate(-400px,-400px);}
 }
 
-/* 🔥 tytuł */
-h1 {
-    text-shadow:0 0 15px cyan, 0 0 40px blue;
-}
-
-/* 💎 punkty */
-#points {
-    font-size:25px;
-    margin:20px;
-}
-
-/* 🌯 OBRAZEK */
+/* 🌯 obrazek */
 #clickBtn {
     width:220px;
     border-radius:20px;
     cursor:pointer;
-    box-shadow:0 0 40px cyan, 0 0 80px blue;
+    box-shadow:0 0 40px cyan;
     transition:0.2s;
 }
 
@@ -56,39 +44,34 @@ h1 {
 }
 
 #clickBtn:active {
-    transform:scale(0.9) rotate(5deg);
+    transform:scale(0.9);
 }
 
-/* ⚡ przyciski */
+/* 🔘 przyciski */
 button {
     margin:10px;
     padding:10px;
     background:cyan;
     border:none;
     border-radius:10px;
-    font-weight:bold;
     cursor:pointer;
-}
-
-button:hover {
-    background:white;
+    font-weight:bold;
 }
 </style>
 </head>
 
 <body>
 
-<h1>🚀 GALACTIC CLICKER 🚀</h1>
+<h1>🚀 CLICKER 🚀</h1>
 
-<h2 id="points">Ładowanie...</h2>
+<h2 id="points">0</h2>
 
-<!-- 🌯 TWÓJ OBRAZEK -->
 <img src="Klik1.jpg" id="clickBtn">
 
 <br><br>
 
-<button onclick="goShop()">💎 Sklep</button>
-<button onclick="reset()">💀 Reset</button>
+<!-- 🔥 TU JEST PRZYCISK DO SKLEPU -->
+<button onclick="window.location.href='index2.html'">💎 Sklep</button>
 
 <script>
 
@@ -115,18 +98,6 @@ function save(){
 function click(){
     points += clickPower;
     save();
-
-    // efekt +punkty
-    let el = document.createElement("div");
-    el.innerText = "+" + clickPower;
-    el.style.position = "absolute";
-    el.style.left = (window.innerWidth/2 + Math.random()*120-60)+"px";
-    el.style.top = (window.innerHeight/2 + Math.random()*120-60)+"px";
-    el.style.color = "cyan";
-    el.style.fontSize = "20px";
-    document.body.appendChild(el);
-
-    setTimeout(()=>el.remove(), 400);
 }
 
 /* klik myszką */
@@ -140,26 +111,13 @@ document.addEventListener("keydown", (e)=>{
     }
 });
 
-/* AUTO KLIK */
+/* AUTO */
 setInterval(()=>{
     if(auto > 0){
         points += auto;
         save();
     }
-}, 1000);
-
-/* sklep */
-function goShop(){
-    window.location.href = "index2.html";
-}
-
-/* reset */
-function reset(){
-    if(confirm("Na pewno?")){
-        localStorage.clear();
-        location.reload();
-    }
-}
+},1000);
 
 /* start */
 update();
