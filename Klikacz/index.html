@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<title>Klikacz</title>
+
+<style>
+body {
+    background:black;
+    color:lime;
+    font-family:monospace;
+    text-align:center;
+    padding-top:50px;
+}
+
+img {
+    width:200px;
+    cursor:pointer;
+    transition:0.1s;
+}
+
+img:active {
+    transform:scale(0.9);
+}
+
+#points {
+    font-size:30px;
+    margin-bottom:20px;
+}
+</style>
+
+</head>
+
+<body>
+
+<h1 id="points">Punkty: 0</h1>
+
+<img src="Klik1.jpg" onclick="addPoint()">
+
+<script>
+let points = 0;
+
+function addPoint() {
+    points++;
+    document.getElementById("points").innerText = "Punkty: " + points;
+}
+</script>
+
+</body>
+</html>
