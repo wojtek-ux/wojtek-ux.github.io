@@ -11,6 +11,7 @@ body {
     color:cyan;
     font-family:Arial;
     text-align:center;
+    user-select:none; /* 🔥 blokuje zaznaczanie */
 }
 
 /* ✨ gwiazdy */
@@ -39,23 +40,24 @@ body::before {
     transition:0.2s;
 }
 
-#clickBtn:hover {
-    transform:scale(1.1);
-}
-
 #clickBtn:active {
     transform:scale(0.9);
 }
 
-/* 🔘 przyciski */
-button {
+/* 🔘 przycisk sklep */
+.shopBtn {
+    display:inline-block;
     margin:10px;
-    padding:10px;
+    padding:12px 20px;
     background:cyan;
-    border:none;
     border-radius:10px;
-    cursor:pointer;
     font-weight:bold;
+    text-decoration:none;
+    color:black;
+}
+
+.shopBtn:active {
+    transform:scale(0.95);
 }
 </style>
 </head>
@@ -70,8 +72,8 @@ button {
 
 <br><br>
 
-<!-- 🔥 TU JEST PRZYCISK DO SKLEPU -->
-<button onclick="window.location.href='index2.html'">💎 Sklep</button>
+<!-- 🔥 NA PEWNO DZIAŁA -->
+<a href="index2.html" class="shopBtn">💎 SKLEP</a>
 
 <script>
 
