@@ -25,7 +25,6 @@ body {
     animation: moveStars 20s linear infinite;
 }
 
-/* 🔥 animacja tła */
 @keyframes moveStars {
     from {
         background-position:0 0, 20px 20px;
@@ -35,7 +34,7 @@ body {
     }
 }
 
-/* 🌯 obrazek */
+/* 🌯 KEBAB */
 #clickBtn {
     width:220px;
     border-radius:20px;
@@ -44,8 +43,14 @@ body {
     transition:0.2s;
 }
 
-#clickBtn:active {
-    transform:scale(0.9);
+/* 🔥 obrót */
+.spin {
+    animation: spin 0.5s linear;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
 }
 
 /* 🔘 sklep */
@@ -96,13 +101,22 @@ function save(){
     update();
 }
 
+/* 🌯 klik */
 function click(){
     points += clickPower;
     save();
+
+    let kebab = document.getElementById("clickBtn");
+
+    // 🔥 obrót
+    kebab.classList.remove("spin");
+    void kebab.offsetWidth; // reset animacji
+    kebab.classList.add("spin");
 }
 
 document.getElementById("clickBtn").onclick = click;
 
+/* ⌨️ SPACJA */
 document.addEventListener("keydown", (e)=>{
     if(e.code === "Space"){
         e.preventDefault();
@@ -110,6 +124,7 @@ document.addEventListener("keydown", (e)=>{
     }
 });
 
+/* ⚡ AUTO */
 setInterval(()=>{
     if(auto > 0){
         points += auto;
