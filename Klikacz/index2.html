@@ -5,13 +5,11 @@ let clickPower = parseInt(localStorage.getItem("clickPower") || 1);
 let auto = parseInt(localStorage.getItem("auto") || 0);
 let rebirths = parseInt(localStorage.getItem("rebirths") || 0);
 
-// 🔥 aktualizacja UI
 function update(){
     document.getElementById("points").innerText =
         "Punkty: " + points + " | 💀 Rebirthy: " + rebirths;
 }
 
-// 💎 upgrade klik
 function buyClick(){
     if(points >= 10){
         points -= 10;
@@ -20,7 +18,6 @@ function buyClick(){
     }
 }
 
-// ⚡ auto klik
 function buyAuto(){
     if(points >= 50){
         points -= 50;
@@ -29,37 +26,32 @@ function buyAuto(){
     }
 }
 
-// 💀 REBIRTH PRO
 function rebirth(){
     if(points >= 1000000){
 
         rebirths++;
 
-        alert("💀 REBIRTH! +" + rebirths + " BOOST!");
+        alert("💀 REBIRTH x" + rebirths);
 
-        // reset gry
         points = 0;
-        clickPower = 1 + rebirths; // 🔥 boost po rebirth
+        clickPower = 1;
         auto = 0;
 
-        save();
         localStorage.setItem("rebirths", rebirths);
-
+        save();
         update();
 
     } else {
-        alert("❌ Potrzebujesz 1,000,000 punktów!");
+        alert("❌ Potrzebujesz 1,000,000!");
     }
 }
 
-// 💾 zapis
 function save(){
     localStorage.setItem("points", points);
     localStorage.setItem("clickPower", clickPower);
     localStorage.setItem("auto", auto);
 }
 
-// 🔙 powrót
 function goBack(){
     window.location.href = "index.html";
 }
