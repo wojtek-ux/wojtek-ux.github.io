@@ -10,10 +10,12 @@ body {
     font-family:monospace;
     margin:0;
     padding:20px;
+    transition:0.1s;
 }
 
 #terminal {
     white-space: pre-line;
+    min-height:300px;
 }
 
 input {
@@ -23,6 +25,19 @@ input {
     color:lime;
     border:1px solid lime;
     font-family:monospace;
+}
+
+.glitch {
+    color:red;
+    animation: glitch 0.1s infinite;
+}
+
+@keyframes glitch {
+    0% { transform: translate(1px, -1px); }
+    25% { transform: translate(-1px, 1px); }
+    50% { transform: translate(1px, 1px); }
+    75% { transform: translate(-1px, -1px); }
+    100% { transform: translate(0,0); }
 }
 </style>
 
@@ -37,12 +52,27 @@ input {
 
 <input id="input" placeholder="Wpisz komendę..." onkeydown="enter(event)">
 
+<audio id="beep">
+    <source src="https://www.soundjay.com/buttons/sounds/beep-07.mp3">
+</audio>
+
 <script>
 let name = localStorage.getItem("user") || "unknown";
 let term = document.getElementById("terminal");
+let beep = document.getElementById("beep");
 
 term.innerHTML += "Welcome " + name + "\n";
 term.innerHTML += "Type 'help' to see commands\n\n";
+
+function playSound() {
+    beep.currentTime = 0;
+    beep.play();
+}
+
+function flashScreen() {
+    document.body.style.background = "red";
+    setTimeout(() => document.body.style.background = "black", 100);
+}
 
 function enter(e) {
     if(e.key === "Enter") {
@@ -50,9 +80,7 @@ function enter(e) {
         let cmd = input.value;
 
         term.innerHTML += "> " + cmd + "\n";
-
         handle(cmd.toLowerCase());
-
         input.value = "";
     }
 }
@@ -61,7 +89,7 @@ function handle(cmd) {
 
     if(cmd === "help") {
         term.innerHTML += "Commands:\n";
-        term.innerHTML += "hack\nscan\nwhoami\nclear\n\n";
+        term.innerHTML += "hack\nscan\nwhoami\nclear\nidiot\n\n";
     }
 
     else if(cmd === "whoami") {
@@ -74,22 +102,56 @@ function handle(cmd) {
 
     else if(cmd === "scan") {
         term.innerHTML += "Scanning network...\n";
+        playSound();
+
         setTimeout(() => {
             term.innerHTML += "IP found: 192.168.0.1\n";
+            playSound();
         }, 500);
+
         setTimeout(() => {
             term.innerHTML += "Open ports: 22, 80, 443\n\n";
+            playSound();
         }, 1000);
     }
 
     else if(cmd === "hack") {
         term.innerHTML += "Bypassing firewall...\n";
+        flashScreen();
+        playSound();
+
         setTimeout(() => {
             term.innerHTML += "Injecting code...\n";
+            flashScreen();
+            playSound();
         }, 500);
+
         setTimeout(() => {
             term.innerHTML += "ACCESS GRANTED 😈\n\n";
+            flashScreen();
+            playSound();
         }, 1200);
+    }
+
+    else if(cmd === "idiot") {
+        let texts = [
+            "Y0U 4R3 1D10T",
+            "YOU@ARE#IDIOT",
+            "Y0U AR3 ID!0T",
+            "YOU ARE IDIOT",
+            "Y_O_U  A_R_E  I_D_I_O_T"
+        ];
+
+        for(let i = 0; i < 5; i++) {
+            setTimeout(() => {
+                let glitch = texts[Math.floor(Math.random() * texts.length)];
+                term.innerHTML += "<span class='glitch'>" + glitch + "</span>\n";
+                flashScreen();
+                playSound();
+            }, i * 200);
+        }
+
+        term.innerHTML += "\n";
     }
 
     else {
