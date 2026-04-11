@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Event</title>
+
+<style>
+body {
+    background:black;
+    color:red;
+    text-align:center;
+    font-family:monospace;
+}
+
+#enemy {
+    width:150px;
+    margin-top:100px;
+    cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<h1>👾 BONUS EVENT 👾</h1>
+<h2>Kliknij potwora szybko!</h2>
+
+<img src="Klik1.jpg" id="enemy" onclick="hit()">
+
+<h2 id="hp">HP: 10</h2>
+
+<script>
+let hp = 10;
+
+function hit(){
+    hp--;
+    document.getElementById("hp").innerText = "HP: " + hp;
+
+    if(hp <= 0){
+        let points = parseInt(localStorage.getItem("points") || 0);
+        points += 50;
+
+        localStorage.setItem("points", points);
+
+        alert("🔥 Wygrałeś +50 punktów!");
+        window.location.href = "index.html";
+    }
+}
+</script>
+
+</body>
+</html>
