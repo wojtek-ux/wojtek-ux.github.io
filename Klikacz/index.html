@@ -7,19 +7,32 @@
 <style>
 body {
     margin:0;
+    background:#000;
     color:cyan;
     font-family:Arial;
     text-align:center;
     user-select:none;
+}
 
-    /* ✨ GWIAZDY BEZ OVERLAYA (NIE BLOKUJĄ) */
-    background:
-    radial-gradient(white 1px, transparent 1px),
-    radial-gradient(white 1px, transparent 1px),
-    #000;
-    
-    background-size:40px 40px, 60px 60px;
-    background-position:0 0, 20px 20px;
+/* 🔥 OVERLAY (NAPRAWIONY) */
+.overlay {
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background: radial-gradient(white 1px, transparent 1px);
+    background-size:40px 40px;
+    animation: stars 40s linear infinite;
+    opacity:0.15;
+
+    pointer-events:none; /* 💀 NAJWAŻNIEJSZE */
+    z-index:0;
+}
+
+@keyframes stars {
+    from {transform:translate(0,0);}
+    to {transform:translate(-400px,-400px);}
 }
 
 /* 🌯 obrazek */
@@ -29,6 +42,8 @@ body {
     cursor:pointer;
     box-shadow:0 0 40px cyan;
     transition:0.2s;
+    position:relative;
+    z-index:1;
 }
 
 #clickBtn:active {
@@ -45,15 +60,25 @@ body {
     font-weight:bold;
     text-decoration:none;
     color:black;
+    position:relative;
+    z-index:1;
 }
 
 .shopBtn:active {
     transform:scale(0.95);
 }
+
+h1, h2 {
+    position:relative;
+    z-index:1;
+}
 </style>
 </head>
 
 <body>
+
+<!-- 🔥 overlay -->
+<div class="overlay"></div>
 
 <h1>🚀 CLICKER 🚀</h1>
 
