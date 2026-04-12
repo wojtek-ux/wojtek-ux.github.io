@@ -1,4 +1,4 @@
-# wojtek-ux.github.io/
+# wojtek-ux.github.io
 Welcome in my project
 
 
