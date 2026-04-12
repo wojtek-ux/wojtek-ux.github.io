@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>ADMIN</title>
+
+<script>
+if(localStorage.getItem("admin")!=="1"){
+    location.href="panel.html";
+}
+</script>
+
+<style>
+body {
+    background:black;
+    color:lime;
+    text-align:center;
+}
+button { padding:10px; margin:10px; }
+input { padding:10px; }
+</style>
+</head>
+
+<body>
+
+<h1>💀 ADMIN PANEL 💀</h1>
+
+<h2 id="stats"></h2>
+
+<input id="money" type="number" placeholder="Ile hajsu">
+<br>
+<button onclick="addMoney()">Dodaj hajs</button>
+
+<br>
+
+<button onclick="addClick()">+10 Klik</button>
+<button onclick="addAuto()">+5 Auto</button>
+
+<br><br>
+
+<button onclick="logout()">Wyloguj</button>
+
+<script>
+
+let points = Number(localStorage.getItem("points")) || 0;
+let clickPower = Number(localStorage.getItem("clickPower")) || 1;
+let auto = Number(localStorage.getItem("auto")) || 0;
+
+function update(){
+    document.getElementById("stats").innerText =
+        "⚡ "+points+" | Klik: "+clickPower+" | Auto: "+auto;
+}
+
+function save(){
+    localStorage.setItem("points", points);
+    localStorage.setItem("clickPower", clickPower);
+    localStorage.setItem("auto", auto);
+    update();
+}
+
+function addMoney(){
+    points += Number(document.getElementById("money").value);
+    save();
+}
+
+function addClick(){
+    clickPower += 10;
+    save();
+}
+
+function addAuto(){
+    auto += 5;
+    save();
+}
+
+function logout(){
+    localStorage.removeItem("admin");
+    location.href="index.html";
+}
+
+update();
+
+</script>
+
+</body>
+</html>
