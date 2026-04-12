@@ -2,84 +2,56 @@
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
-<title>SYSTEM</title>
+<title>Kolorowa Strona 🎨</title>
 
 <style>
 body {
     margin: 0;
-    background: black;
-    color: lime;
-    font-family: monospace;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+    background: linear-gradient(45deg, #ff9a9e, #fad0c4, #fbc2eb, #a1c4fd);
+    background-size: 400% 400%;
+    animation: bg 6s infinite alternate;
+    font-family: Arial;
+    text-align: center;
 }
 
-/* glitch text */
+@keyframes bg {
+    0% {background-position: left;}
+    100% {background-position: right;}
+}
+
 h1 {
+    margin-top: 100px;
     font-size: 50px;
-    position: absolute;
-    top: 50px;
-    animation: glitch 1s infinite;
-}
-
-@keyframes glitch {
-    0% {text-shadow: 2px 0 red;}
-    25% {text-shadow: -2px 0 blue;}
-    50% {text-shadow: 2px 2px green;}
-    75% {text-shadow: -2px -2px red;}
-    100% {text-shadow: 2px 0 blue;}
+    color: white;
 }
 
 button {
-    padding: 20px 50px;
-    font-size: 20px;
-    background: black;
-    color: lime;
-    border: 2px solid lime;
+    margin-top: 50px;
+    padding: 20px 60px;
+    font-size: 25px;
+    border: none;
+    border-radius: 20px;
+    background: yellow;
     cursor: pointer;
-    transition: 0.3s;
+    transition: 0.2s;
 }
 
 button:hover {
-    background: lime;
-    color: black;
-}
-
-/* loading screen */
-#loading {
-    position: fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background:black;
-    color:red;
-    display:none;
-    justify-content:center;
-    align-items:center;
-    font-size:40px;
+    transform: scale(1.1);
+    background: orange;
 }
 </style>
 </head>
 
 <body>
 
-<h1>SYSTEM MENU</h1>
+<h1>🎨 Witaj w świecie kolorów! 🎨</h1>
 
 <button onclick="goColors()">Kolory</button>
 
-<div id="loading">ŁADOWANIE...</div>
-
 <script>
 function goColors() {
-    let loading = document.getElementById("loading");
-    loading.style.display = "flex";
-
-    setTimeout(() => {
-        window.location.href = "k000o000l000r000y/";
-    }, 1500);
+    window.location.href = "k000o000l000r000y/";
 }
 </script>
 
