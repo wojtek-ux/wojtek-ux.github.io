@@ -2,22 +2,101 @@
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
-<title>Quiz</title>
+<title>Quiz Hacker</title>
 
 <style>
 body {
+    margin:0;
     background:black;
-    color:lime;
+    color:#00ffcc;
     font-family:monospace;
     text-align:center;
-    padding-top:50px;
+    overflow:hidden;
 }
 
+/* TŁO */
+body::before {
+    content:"";
+    position:fixed;
+    width:100%;
+    height:100%;
+    background: url("https://www.transparenttextures.com/patterns/stardust.png");
+    animation: moveBg 20s linear infinite;
+    opacity:0.3;
+}
+
+@keyframes moveBg {
+    from { background-position:0 0; }
+    to { background-position:1000px 1000px; }
+}
+
+/* BOX */
+.container {
+    position:relative;
+    top:50%;
+    transform:translateY(-50%);
+    background: rgba(0,0,0,0.8);
+    border-radius:20px;
+    padding:30px;
+    width:300px;
+    margin:auto;
+    box-shadow:0 0 25px #00ffcc;
+}
+
+/* TYTUŁ */
+h1 {
+    text-shadow:0 0 10px #00ffcc;
+}
+
+/* PYTANIE */
+#question {
+    margin:20px 0;
+    font-size:18px;
+}
+
+/* PRZYCISKI */
 button {
     display:block;
     margin:10px auto;
     padding:10px;
-    width:200px;
+    width:220px;
+    border:none;
+    border-radius:10px;
+    background:#001f1f;
+    color:#00ffcc;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+button:hover {
+    background:#00ffcc;
+    color:black;
+    transform:scale(1.05);
+    box-shadow:0 0 15px #00ffcc;
+}
+
+/* WYNIK */
+.result {
+    font-size:25px;
+    text-shadow:0 0 15px #00ffcc;
+}
+
+/* STOPKA */
+footer {
+    position: fixed;
+    bottom: 10px;
+    width: 100%;
+    font-size: 14px;
+    color: #00ffcc;
+    opacity: 0.7;
+    text-shadow: 0 0 5px #00ffcc;
+    animation: flicker 2s infinite alternate;
+}
+
+/* LEKKA ANIMACJA */
+@keyframes flicker {
+    from { opacity: 0.5; }
+    to { opacity: 1; text-shadow: 0 0 15px #00ffcc; }
 }
 </style>
 
@@ -25,39 +104,24 @@ button {
 
 <body>
 
+<div class="container">
 <h1>🧠 QUIZ</h1>
-
 <div id="question"></div>
 <div id="answers"></div>
+</div>
+
+<footer id="footer"></footer>
 
 <script>
 
 let quiz = [
-
 {q:"Najlepsza gra?", a:["Roblox","Minecraft","Fortnite"], c:0},
 {q:"Co robi hacker?", a:["Gotuje","Programuje","Śpi"], c:1},
 {q:"HTML to?", a:["Język","Gra","Program"], c:0},
 {q:"CSS służy do?", a:["Stylu","Gier","Muzyki"], c:0},
-{q:"JS to?", a:["JavaScript","Java","JustStyle"], c:0},
-{q:"CPU to?", a:["Procesor","Gra","Program"], c:0},
-{q:"GPU to?", a:["Karta graficzna","Procesor","RAM"], c:0},
-{q:"RAM to?", a:["Pamięć","Dysk","Grafika"], c:0},
-{q:"IP to?", a:["Adres","Hasło","Plik"], c:0},
-{q:"WWW to?", a:["Strona","Gra","Kod"], c:0},
-
-{q:"Najlepszy język?", a:["JS","Python","C++"], c:0},
-{q:"Discord to?", a:["App","Gra","System"], c:0},
-{q:"YouTube to?", a:["Video","Gra","Kod"], c:0},
-{q:"TikTok to?", a:["App","Program","System"], c:0},
-{q:"Windows to?", a:["System","Gra","Kod"], c:0},
-{q:"Linux to?", a:["System","Gra","Przeglądarka"], c:0},
-{q:"GitHub to?", a:["Strona kodu","Gra","Chat"], c:0},
-{q:"Roblox Studio to?", a:["Tworzenie gier","Gra","System"], c:0},
-{q:"Plugin to?", a:["Dodatek","Gra","Kod"], c:0},
-{q:"Serwer to?", a:["Maszyna","Gra","Program"], c:0}
-
+{q:"JS to?", a:["JavaScript","Java","JustStyle"], c:0}
 ];
-    
+
 let i = 0;
 let score = 0;
 
@@ -81,9 +145,14 @@ function answer(x){
     if(i < quiz.length){
         load();
     } else {
-        document.body.innerHTML = `<h1>Twój wynik: ${score}/${quiz.length}</h1>`;
+        document.querySelector(".container").innerHTML =
+        `<div class="result">🔥 Wynik: ${score}/${quiz.length} 🔥</div>`;
     }
 }
+
+/* AUTO ROK */
+document.getElementById("footer").innerText =
+"© VKN " + new Date().getFullYear();
 
 load();
 
