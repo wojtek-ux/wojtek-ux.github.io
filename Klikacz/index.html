@@ -13,7 +13,6 @@ body {
     user-select:none;
     overflow:hidden;
 
-    /* 🌌 GWIAZDY */
     background:
     radial-gradient(white 1px, transparent 1px),
     radial-gradient(white 1px, transparent 1px),
@@ -26,24 +25,17 @@ body {
 }
 
 @keyframes moveStars {
-    from {
-        background-position:0 0, 20px 20px;
-    }
-    to {
-        background-position:0 1000px, 20px 1020px;
-    }
+    from {background-position:0 0, 20px 20px;}
+    to {background-position:0 1000px, 20px 1020px;}
 }
 
-/* 🌯 KEBAB */
 #clickBtn {
     width:220px;
     border-radius:20px;
     cursor:pointer;
     box-shadow:0 0 40px cyan;
-    transition:0.2s;
 }
 
-/* 🔥 obrót */
 .spin {
     animation: spin 0.5s linear;
 }
@@ -53,7 +45,6 @@ body {
     to { transform: rotate(360deg); }
 }
 
-/* 🔘 sklep */
 .shopBtn {
     display:inline-block;
     margin:10px;
@@ -65,29 +56,28 @@ body {
     font-weight:bold;
 }
 
-.shopBtn:active {
-    transform:scale(0.95);
+/* 🔴 PANEL */
+.panelBtn {
+    position:fixed;
+    bottom:50px;
+    left:50%;
+    transform:translateX(-50%);
+    padding:10px 20px;
+    background:red;
+    color:white;
+    border-radius:10px;
+    text-decoration:none;
+    font-weight:bold;
 }
 
-/* 💙 JULKA */
+/* 💙 STOPKA */
 .julka {
     position:fixed;
     bottom:10px;
     width:100%;
     text-align:center;
-    font-size:18px;
     color:#00ffff;
-    text-shadow:0 0 10px cyan, 0 0 20px blue;
     opacity:0.8;
-    pointer-events:none;
-
-    animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-    0% { opacity:0.6; transform:scale(1); }
-    50% { opacity:1; transform:scale(1.05); }
-    100% { opacity:0.6; transform:scale(1); }
 }
 </style>
 </head>
@@ -104,8 +94,9 @@ body {
 
 <a href="index2.html" class="shopBtn">💎 SKLEP</a>
 
-<!-- 💙 NAPIS -->
-<div class="julka">© VKN 2026 | Tworzymy od 2026 !💙</div>
+<a href="panel.html" class="panelBtn">🔴 PANEL</a>
+
+<div class="julka">© VKN 2026 💙</div>
 
 <script>
 
@@ -125,33 +116,28 @@ function save(){
     update();
 }
 
-/* 🌯 klik */
 function click(){
     points += clickPower;
     save();
 
-    let kebab = document.getElementById("clickBtn");
-
-    // 🔥 obrót
-    kebab.classList.remove("spin");
-    void kebab.offsetWidth;
-    kebab.classList.add("spin");
+    let k = document.getElementById("clickBtn");
+    k.classList.remove("spin");
+    void k.offsetWidth;
+    k.classList.add("spin");
 }
 
 document.getElementById("clickBtn").onclick = click;
 
-/* ⌨️ SPACJA */
-document.addEventListener("keydown", (e)=>{
-    if(e.code === "Space"){
+document.addEventListener("keydown", e=>{
+    if(e.code==="Space"){
         e.preventDefault();
         click();
     }
 });
 
-/* ⚡ AUTO */
 setInterval(()=>{
-    if(auto > 0){
-        points += auto;
+    if(auto>0){
+        points+=auto;
         save();
     }
 },1000);
