@@ -23,11 +23,12 @@ h1 {
 }
 
 #colorBox {
-    width:200px;
-    height:200px;
+    width:220px;
+    height:220px;
     margin:30px auto;
     border-radius:20px;
     display:none;
+    box-shadow:0 0 20px rgba(0,0,0,0.3);
 }
 
 button {
@@ -54,26 +55,40 @@ button {
 
 <script>
 
+/* 🎨 DUŻO KOLORÓW */
 let colors = [
     {name:"czerwony", color:"red"},
     {name:"niebieski", color:"blue"},
     {name:"zielony", color:"green"},
-    {name:"żółty", color:"yellow"}
+    {name:"żółty", color:"yellow"},
+    {name:"pomarańczowy", color:"orange"},
+    {name:"różowy", color:"pink"},
+    {name:"fioletowy", color:"purple"},
+    {name:"brązowy", color:"brown"},
+    {name:"czarny", color:"black"},
+    {name:"biały", color:"white"},
+    {name:"szary", color:"gray"},
+    {name:"turkusowy", color:"turquoise"},
+    {name:"złoty", color:"gold"},
+    {name:"srebrny", color:"silver"}
 ];
 
+/* 🗣️ mówienie */
 function speak(text){
     let msg = new SpeechSynthesisUtterance(text);
     msg.lang = "pl-PL";
+    speechSynthesis.cancel(); // 🔥 zatrzymuje stare
     speechSynthesis.speak(msg);
 }
 
+/* 🚀 start */
 function start(){
+
     let screen = document.getElementById("screen");
     let box = document.getElementById("colorBox");
 
     box.style.display = "none";
 
-    // 🔥 ODLICZANIE
     screen.innerText = "3...";
     speak("trzy");
 
@@ -92,13 +107,19 @@ function start(){
         speak("start");
     },3000);
 
-    // 🎨 POKAZ KOLORU
     setTimeout(()=>{
         let c = colors[Math.floor(Math.random()*colors.length)];
 
         screen.innerText = "";
         box.style.display = "block";
         box.style.background = c.color;
+
+        /* 🔥 specjalny tekst dla białego */
+        if(c.name === "biały"){
+            box.style.border = "3px solid black";
+        } else {
+            box.style.border = "none";
+        }
 
         speak("to jest kolor " + c.name);
 
