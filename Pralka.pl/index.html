@@ -25,7 +25,7 @@ h1 {
     transition:0.3s;
 }
 
-/* 🔥 obrót */
+/* 🔄 obrót */
 .spin {
     animation: spin 1s linear infinite;
 }
@@ -56,22 +56,42 @@ h1 {
 
 <div id="points">💰 0</div>
 
-<img src="https://cdn-icons-png.flaticon.com/512/1046/1046857.png" id="washer">
+<!-- 🧺 TWOJA PRALKA -->
+<img src="pralka.jpg" id="washer">
 
-<!-- 👕 ubrania -->
-<img src="https://cdn-icons-png.flaticon.com/512/892/892458.png" class="cloth" style="left:50px; top:200px;">
-<img src="https://cdn-icons-png.flaticon.com/512/892/892458.png" class="cloth" style="left:150px; top:300px;">
-<img src="https://cdn-icons-png.flaticon.com/512/892/892458.png" class="cloth" style="left:250px; top:250px;">
+<!-- 👕 TWOJE UBRANIA -->
+<img src="ubranie1.jpg" class="cloth" id="c1">
+<img src="ubranie2.jpg" class="cloth" id="c2">
+<img src="ubranie3.jpg" class="cloth" id="c3">
 
 <script>
 
 let points = 0;
 let clothesIn = 0;
 
-/* 🔄 DRAG */
+/* 📌 STARTOWE POZYCJE */
+let startPos = {
+    c1: {x:50, y:200},
+    c2: {x:150, y:300},
+    c3: {x:250, y:250}
+};
+
+/* 🔄 ustaw start */
+function resetClothes(){
+    clothesIn = 0;
+
+    for(let id in startPos){
+        let c = document.getElementById(id);
+        c.style.display = "block";
+        c.style.left = startPos[id].x + "px";
+        c.style.top = startPos[id].y + "px";
+    }
+}
+
+/* 🖱️ DRAG */
 document.querySelectorAll(".cloth").forEach(cloth => {
 
-    cloth.onmousedown = function(e){
+    cloth.onmousedown = function(){
 
         document.onmousemove = function(e){
             cloth.style.left = e.pageX - 40 + "px";
@@ -81,7 +101,6 @@ document.querySelectorAll(".cloth").forEach(cloth => {
         document.onmouseup = function(){
             document.onmousemove = null;
 
-            // 📦 sprawdz czy w pralce
             let washer = document.getElementById("washer").getBoundingClientRect();
             let c = cloth.getBoundingClientRect();
 
@@ -105,7 +124,6 @@ document.getElementById("washer").onclick = function(){
     if(clothesIn > 0){
 
         let w = this;
-
         w.classList.add("spin");
 
         setTimeout(()=>{
@@ -113,11 +131,13 @@ document.getElementById("washer").onclick = function(){
 
             let reward = clothesIn * 10;
             points += reward;
-            clothesIn = 0;
 
             document.getElementById("points").innerText = "💰 " + points;
 
             alert("Wyprane! +" + reward + " 💰");
+
+            /* 🔥 PRZYWRÓĆ UBRANIA */
+            resetClothes();
 
         },5000);
 
@@ -125,6 +145,9 @@ document.getElementById("washer").onclick = function(){
         alert("Wrzuć ubrania!");
     }
 }
+
+/* start */
+resetClothes();
 
 </script>
 
