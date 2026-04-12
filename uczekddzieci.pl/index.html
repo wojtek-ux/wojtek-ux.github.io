@@ -2,130 +2,85 @@
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
-<title>Nauka Kolorów</title>
+<title>SYSTEM</title>
 
 <style>
 body {
-    margin:0;
-    font-family:Arial;
-    text-align:center;
-    background:linear-gradient(135deg,#89f7fe,#66a6ff);
-    color:white;
+    margin: 0;
+    background: black;
+    color: lime;
+    font-family: monospace;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
 }
 
+/* glitch text */
 h1 {
-    margin-top:20px;
+    font-size: 50px;
+    position: absolute;
+    top: 50px;
+    animation: glitch 1s infinite;
 }
 
-#screen {
-    font-size:40px;
-    margin-top:40px;
-}
-
-#colorBox {
-    width:220px;
-    height:220px;
-    margin:30px auto;
-    border-radius:20px;
-    display:none;
-    box-shadow:0 0 20px rgba(0,0,0,0.3);
+@keyframes glitch {
+    0% {text-shadow: 2px 0 red;}
+    25% {text-shadow: -2px 0 blue;}
+    50% {text-shadow: 2px 2px green;}
+    75% {text-shadow: -2px -2px red;}
+    100% {text-shadow: 2px 0 blue;}
 }
 
 button {
-    padding:15px 30px;
-    font-size:18px;
-    border:none;
-    border-radius:10px;
-    background:white;
-    color:black;
-    cursor:pointer;
+    padding: 20px 50px;
+    font-size: 20px;
+    background: black;
+    color: lime;
+    border: 2px solid lime;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: lime;
+    color: black;
+}
+
+/* loading screen */
+#loading {
+    position: fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:black;
+    color:red;
+    display:none;
+    justify-content:center;
+    align-items:center;
+    font-size:40px;
 }
 </style>
 </head>
 
 <body>
 
-<h1>🎨 Nauka Kolorów 🎨</h1>
+<h1>SYSTEM MENU</h1>
 
-<div id="screen">Kliknij START</div>
+<button onclick="goColors()">Kolory</button>
 
-<div id="colorBox"></div>
-
-<button onclick="start()">START</button>
+<div id="loading">ŁADOWANIE...</div>
 
 <script>
+function goColors() {
+    let loading = document.getElementById("loading");
+    loading.style.display = "flex";
 
-/* 🎨 DUŻO KOLORÓW */
-let colors = [
-    {name:"czerwony", color:"red"},
-    {name:"niebieski", color:"blue"},
-    {name:"zielony", color:"green"},
-    {name:"żółty", color:"yellow"},
-    {name:"pomarańczowy", color:"orange"},
-    {name:"różowy", color:"pink"},
-    {name:"fioletowy", color:"purple"},
-    {name:"brązowy", color:"brown"},
-    {name:"czarny", color:"black"},
-    {name:"biały", color:"white"},
-    {name:"szary", color:"gray"},
-    {name:"turkusowy", color:"turquoise"},
-    {name:"złoty", color:"gold"},
-    {name:"srebrny", color:"silver"}
-];
-
-/* 🗣️ mówienie */
-function speak(text){
-    let msg = new SpeechSynthesisUtterance(text);
-    msg.lang = "pl-PL";
-    speechSynthesis.cancel(); // 🔥 zatrzymuje stare
-    speechSynthesis.speak(msg);
+    setTimeout(() => {
+        window.location.href = "k000o000l000r000y/";
+    }, 1500);
 }
-
-/* 🚀 start */
-function start(){
-
-    let screen = document.getElementById("screen");
-    let box = document.getElementById("colorBox");
-
-    box.style.display = "none";
-
-    screen.innerText = "3...";
-    speak("trzy");
-
-    setTimeout(()=>{
-        screen.innerText = "2...";
-        speak("dwa");
-    },1000);
-
-    setTimeout(()=>{
-        screen.innerText = "1...";
-        speak("jeden");
-    },2000);
-
-    setTimeout(()=>{
-        screen.innerText = "START!";
-        speak("start");
-    },3000);
-
-    setTimeout(()=>{
-        let c = colors[Math.floor(Math.random()*colors.length)];
-
-        screen.innerText = "";
-        box.style.display = "block";
-        box.style.background = c.color;
-
-        /* 🔥 specjalny tekst dla białego */
-        if(c.name === "biały"){
-            box.style.border = "3px solid black";
-        } else {
-            box.style.border = "none";
-        }
-
-        speak("to jest kolor " + c.name);
-
-    },4000);
-}
-
 </script>
 
 </body>
