@@ -25,7 +25,7 @@ Po prostu:
 ### 🧠 Pamiętaj
 
 Kopiowanie = 0 expa
+
 Tworzenie samemu = +1000 expa 🚀
 
 Dzięki za zrozumienie!
-/
