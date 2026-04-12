@@ -1,17 +1,19 @@
 # wojtek-ux.github.io
-Welcome in my project
+Witaj w moim projekcie !
 
 
 
-You have here :
-Hacker (fake) Link : https://wojtek-ux.github.io/Hacker/
+Masz tu :
+Hacker (fałszywy) | Link : https://wojtek-ux.github.io/Hacker/
 
-VKN Studio, Link : https://wojtek-ux.github.io/VKN%20Studio/
+VKN Studio | Link : https://wojtek-ux.github.io/VKN%20Studio/
 
-Nick Generator, Link : https://wojtek-ux.github.io/Nick%20Generator/
+Nick Generator | Link : https://wojtek-ux.github.io/Nick%20Generator/
 
-Quiz, Link : https://wojtek-ux.github.io/Quiz/
+Quiz | Link : https://wojtek-ux.github.io/Quiz/
 
-Cliker, Link : https://wojtek-ux.github.io/Klikacz/index.html
+Cliker | Link : https://wojtek-ux.github.io/Klikacz/index.html
+
+Pralka.pl | Link : https://wojtek-ux.github.io/Pralka.pl/
 
 (More updates son)
