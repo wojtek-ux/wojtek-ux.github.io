@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Panel</title>
+<style>
+body {
+    background:black;
+    color:red;
+    text-align:center;
+    padding-top:100px;
+}
+input { padding:10px; }
+button { padding:10px; background:red; color:white; border:none; }
+</style>
+</head>
+
+<body>
+
+<h1>🔐 PANEL</h1>
+
+<input type="password" id="p" placeholder="Hasło">
+<br>
+<button onclick="login()">Zaloguj</button>
+
+<script>
+function login(){
+    if(document.getElementById("p").value==="Wojtek1608"){
+        localStorage.setItem("admin","1");
+        location.href="panel-a.html";
+    } else {
+        alert("Złe hasło!");
+    }
+}
+</script>
+
+</body>
+</html>
