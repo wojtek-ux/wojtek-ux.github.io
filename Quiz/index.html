@@ -11,7 +11,6 @@ body {
     color:#00ffcc;
     font-family:monospace;
     text-align:center;
-    overflow:hidden;
 }
 
 /* TŁO */
@@ -23,6 +22,7 @@ body::before {
     background: url("https://www.transparenttextures.com/patterns/stardust.png");
     animation: moveBg 20s linear infinite;
     opacity:0.3;
+    z-index:-1;
 }
 
 @keyframes moveBg {
@@ -32,14 +32,13 @@ body::before {
 
 /* BOX */
 .container {
-    position:relative;
-    top:50%;
-    transform:translateY(-50%);
+    margin-top: 80px;
     background: rgba(0,0,0,0.8);
     border-radius:20px;
     padding:30px;
     width:300px;
-    margin:auto;
+    margin-left:auto;
+    margin-right:auto;
     box-shadow:0 0 25px #00ffcc;
 }
 
@@ -83,9 +82,8 @@ button:hover {
 
 /* STOPKA */
 footer {
-    position: fixed;
-    bottom: 10px;
-    width: 100%;
+    margin-top: 50px;
+    padding: 20px;
     font-size: 14px;
     color: #00ffcc;
     opacity: 0.7;
@@ -93,7 +91,7 @@ footer {
     animation: flicker 2s infinite alternate;
 }
 
-/* LEKKA ANIMACJA */
+/* ANIMACJA */
 @keyframes flicker {
     from { opacity: 0.5; }
     to { opacity: 1; text-shadow: 0 0 15px #00ffcc; }
