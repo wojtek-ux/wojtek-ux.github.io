@@ -68,6 +68,27 @@ body {
 .shopBtn:active {
     transform:scale(0.95);
 }
+
+/* 💙 JULKA */
+.julka {
+    position:fixed;
+    bottom:10px;
+    width:100%;
+    text-align:center;
+    font-size:18px;
+    color:#00ffff;
+    text-shadow:0 0 10px cyan, 0 0 20px blue;
+    opacity:0.8;
+    pointer-events:none;
+
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity:0.6; transform:scale(1); }
+    50% { opacity:1; transform:scale(1.05); }
+    100% { opacity:0.6; transform:scale(1); }
+}
 </style>
 </head>
 
@@ -82,6 +103,9 @@ body {
 <br><br>
 
 <a href="index2.html" class="shopBtn">💎 SKLEP</a>
+
+<!-- 💙 NAPIS -->
+<div class="julka">TO DLA CIEBIE JULKA 💙</div>
 
 <script>
 
@@ -110,7 +134,7 @@ function click(){
 
     // 🔥 obrót
     kebab.classList.remove("spin");
-    void kebab.offsetWidth; // reset animacji
+    void kebab.offsetWidth;
     kebab.classList.add("spin");
 }
 
