@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Sklep</title>
+
+<style>
+body {
+    background:black;
+    color:cyan;
+    text-align:center;
+    font-family:Arial;
+}
+
+.box {
+    background:#222;
+    margin:20px auto;
+    padding:20px;
+    width:250px;
+    border-radius:15px;
+}
+
+button {
+    padding:10px;
+    background:cyan;
+    border:none;
+}
+</style>
+</head>
+
+<body>
+
+<h1>💎 SKLEP 💎</h1>
+
+<h2 id="stats"></h2>
+
+<div class="box">
+    <h3>💰 +1 mnożnik</h3>
+    <p id="cost"></p>
+    <button onclick="buy()">Kup</button>
+</div>
+
+<br>
+
+<a href="index.html">⬅ Powrót</a>
+
+<script>
+
+let points = Number(localStorage.getItem("points")) || 0;
+let multiplier = Number(localStorage.getItem("multi")) || 1;
+
+let cost = multiplier * 50;
+
+function update(){
+    document.getElementById("stats").innerText =
+        "💰 "+points+" | x"+multiplier;
+
+    document.getElementById("cost").innerText =
+        "Koszt: "+cost;
+}
+
+function save(){
+    localStorage.setItem("points", points);
+    localStorage.setItem("multi", multiplier);
+}
+
+function buy(){
+    if(points>=cost){
+        points -= cost;
+        multiplier++;
+
+        cost = multiplier * 50;
+
+        save();
+        update();
+    } else {
+        alert("Za mało kasy!");
+    }
+}
+
+update();
+
+</script>
+
+</body>
+</html>
