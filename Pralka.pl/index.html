@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<title>Pralka Simulator</title>
+
+<style>
+body {
+    margin:0;
+    background:#111;
+    color:white;
+    font-family:Arial;
+    text-align:center;
+    overflow:hidden;
+}
+
+h1 {
+    margin-top:10px;
+}
+
+/* 🧺 PRALKA */
+#washer {
+    width:200px;
+    margin-top:40px;
+    transition:0.3s;
+}
+
+/* 🔥 obrót */
+.spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* 👕 UBRANIA */
+.cloth {
+    width:80px;
+    position:absolute;
+    cursor:grab;
+}
+
+/* 💰 punkty */
+#points {
+    font-size:20px;
+    margin-top:10px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🧺 PRALKA SIMULATOR 🧺</h1>
+
+<div id="points">💰 0</div>
+
+<img src="https://cdn-icons-png.flaticon.com/512/1046/1046857.png" id="washer">
+
+<!-- 👕 ubrania -->
+<img src="https://cdn-icons-png.flaticon.com/512/892/892458.png" class="cloth" style="left:50px; top:200px;">
+<img src="https://cdn-icons-png.flaticon.com/512/892/892458.png" class="cloth" style="left:150px; top:300px;">
+<img src="https://cdn-icons-png.flaticon.com/512/892/892458.png" class="cloth" style="left:250px; top:250px;">
+
+<script>
+
+let points = 0;
+let clothesIn = 0;
+
+/* 🔄 DRAG */
+document.querySelectorAll(".cloth").forEach(cloth => {
+
+    cloth.onmousedown = function(e){
+
+        document.onmousemove = function(e){
+            cloth.style.left = e.pageX - 40 + "px";
+            cloth.style.top = e.pageY - 40 + "px";
+        }
+
+        document.onmouseup = function(){
+            document.onmousemove = null;
+
+            // 📦 sprawdz czy w pralce
+            let washer = document.getElementById("washer").getBoundingClientRect();
+            let c = cloth.getBoundingClientRect();
+
+            if(
+                c.left > washer.left &&
+                c.right < washer.right &&
+                c.top > washer.top &&
+                c.bottom < washer.bottom
+            ){
+                cloth.style.display = "none";
+                clothesIn++;
+            }
+        }
+    }
+
+});
+
+/* 🧺 KLIK PRALKI */
+document.getElementById("washer").onclick = function(){
+
+    if(clothesIn > 0){
+
+        let w = this;
+
+        w.classList.add("spin");
+
+        setTimeout(()=>{
+            w.classList.remove("spin");
+
+            let reward = clothesIn * 10;
+            points += reward;
+            clothesIn = 0;
+
+            document.getElementById("points").innerText = "💰 " + points;
+
+            alert("Wyprane! +" + reward + " 💰");
+
+        },5000);
+
+    } else {
+        alert("Wrzuć ubrania!");
+    }
+}
+
+</script>
+
+</body>
+</html>
