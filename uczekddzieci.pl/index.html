@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<title>Nauka Kolorów</title>
+
+<style>
+body {
+    margin:0;
+    font-family:Arial;
+    text-align:center;
+    background:linear-gradient(135deg,#89f7fe,#66a6ff);
+    color:white;
+}
+
+h1 {
+    margin-top:20px;
+}
+
+#screen {
+    font-size:40px;
+    margin-top:40px;
+}
+
+#colorBox {
+    width:200px;
+    height:200px;
+    margin:30px auto;
+    border-radius:20px;
+    display:none;
+}
+
+button {
+    padding:15px 30px;
+    font-size:18px;
+    border:none;
+    border-radius:10px;
+    background:white;
+    color:black;
+    cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🎨 Nauka Kolorów 🎨</h1>
+
+<div id="screen">Kliknij START</div>
+
+<div id="colorBox"></div>
+
+<button onclick="start()">START</button>
+
+<script>
+
+let colors = [
+    {name:"czerwony", color:"red"},
+    {name:"niebieski", color:"blue"},
+    {name:"zielony", color:"green"},
+    {name:"żółty", color:"yellow"}
+];
+
+function speak(text){
+    let msg = new SpeechSynthesisUtterance(text);
+    msg.lang = "pl-PL";
+    speechSynthesis.speak(msg);
+}
+
+function start(){
+    let screen = document.getElementById("screen");
+    let box = document.getElementById("colorBox");
+
+    box.style.display = "none";
+
+    // 🔥 ODLICZANIE
+    screen.innerText = "3...";
+    speak("trzy");
+
+    setTimeout(()=>{
+        screen.innerText = "2...";
+        speak("dwa");
+    },1000);
+
+    setTimeout(()=>{
+        screen.innerText = "1...";
+        speak("jeden");
+    },2000);
+
+    setTimeout(()=>{
+        screen.innerText = "START!";
+        speak("start");
+    },3000);
+
+    // 🎨 POKAZ KOLORU
+    setTimeout(()=>{
+        let c = colors[Math.floor(Math.random()*colors.length)];
+
+        screen.innerText = "";
+        box.style.display = "block";
+        box.style.background = c.color;
+
+        speak("to jest kolor " + c.name);
+
+    },4000);
+}
+
+</script>
+
+</body>
+</html>
