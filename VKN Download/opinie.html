@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<title>Opinie</title>
+
+<style>
+body {
+    margin:0;
+    font-family:Arial;
+    background:#0f172a;
+    color:white;
+    text-align:center;
+}
+
+.review {
+    background:#1e293b;
+    margin:15px;
+    padding:15px;
+    border-radius:10px;
+}
+
+.backBtn {
+    margin:20px;
+    padding:10px 20px;
+    border-radius:10px;
+    cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<h1>💬 Wszystkie opinie</h1>
+
+<button class="backBtn" onclick="goBack()">⬅ Powrót</button>
+
+<div id="allReviews"></div>
+
+<script>
+
+let reviews = JSON.parse(localStorage.getItem("reviews")) || [];
+
+let box = document.getElementById("allReviews");
+
+reviews.forEach(r=>{
+    box.innerHTML += `
+        <div class="review">
+            <b>${r.nick}</b> ⭐${r.stars}<br>
+            ${r.text}
+        </div>
+    `;
+});
+
+function goBack(){
+    window.location.href = "index.html";
+}
+
+</script>
+
+</body>
+</html>
