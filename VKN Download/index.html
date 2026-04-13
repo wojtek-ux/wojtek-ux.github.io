@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<title>VKN Download</title>
+
+<style>
+body {
+    margin:0;
+    font-family:Arial;
+    background:#0f172a;
+    color:white;
+    text-align:center;
+}
+
+/* 🔝 HEADER */
+header {
+    padding:40px;
+}
+
+h1 {
+    font-size:40px;
+}
+
+/* 📦 KARTY */
+.container {
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+}
+
+.card {
+    background:#1e293b;
+    width:260px;
+    margin:15px;
+    padding:20px;
+    border-radius:15px;
+    transition:0.3s;
+}
+
+.card:hover {
+    transform:translateY(-10px);
+    box-shadow:0 10px 30px rgba(0,0,0,0.5);
+}
+
+/* 🖼️ */
+.card img {
+    width:100%;
+    border-radius:10px;
+}
+
+/* 🔘 PRZYCISK */
+.downloadBtn {
+    display:inline-block;
+    margin-top:15px;
+    padding:10px 20px;
+    background:cyan;
+    color:black;
+    border-radius:10px;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+.downloadBtn:hover {
+    background:white;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>🎮 VKN Download 🎮</h1>
+    <p>Pobierz nasze mody i dodatki lub inne.. 🔥</p>
+</header>
+
+<div class="container">
+
+    <!-- 🔥 DODATEK 1 -->
+    <div class="card">
+        <img src="dodatek1.png">
+        <h3>Pusty1</h3>
+        <p>Pusty</p>
+        <a href="plik1.zip" class="downloadBtn" download>Pobierz</a>
+    </div>
+
+    <!-- 🔥 DODATEK 2 -->
+    <div class="card">
+        <img src="dodatek2.png">
+        <h3>Pusty2</h3>
+        <p>Pusty</p>
+        <a href="plik2.zip" class="downloadBtn" download>Pobierz</a>
+    </div>
+
+    <!-- 🔥 DODATEK 3 -->
+    <div class="card">
+        <img src="dodatek3.png">
+        <h3>Pusty3</h3>
+        <p>Pusty</p>
+        <a href="plik3.zip" class="downloadBtn" download>Pobierz</a>
+    </div>
+
+</div>
+
+</body>
+</html>
