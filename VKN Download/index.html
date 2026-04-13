@@ -99,23 +99,30 @@ const app = initializeApp({
 
 const db = getFirestore(app);
 
+/* ELEMENTY */
+const dl = document.getElementById("dl");
+const reviews = document.getElementById("reviews");
+const nick = document.getElementById("nick");
+const text = document.getElementById("text");
+
 /* 📥 LOAD DOWNLOADS */
 async function loadDL(){
-    const r=doc(db,"downloads","main");
-    const s=await getDoc(r);
+    const r = doc(db,"downloads","main");
+    const s = await getDoc(r);
 
     if(s.exists()){
-        dl.innerText="📥 Pobrania: "+s.data().count;
+        dl.innerText = "📥 Pobrania: " + s.data().count;
     }else{
         await setDoc(r,{count:0});
+        dl.innerText = "📥 Pobrania: 0";
     }
 }
 
 /* 🔥 DOWNLOAD FIX */
-window.download=async(e)=>{
+window.download = async(e)=>{
     e.preventDefault();
 
-    const r=doc(db,"downloads","main");
+    const r = doc(db,"downloads","main");
 
     try{
         await updateDoc(r,{count:increment(1)});
@@ -131,28 +138,34 @@ window.download=async(e)=>{
 }
 
 /* ⭐ */
-let stars=0;
-window.setStars=n=>stars=n;
+let stars = 0;
+window.setStars = n => stars = n;
 
-/* 💬 ADD */
-window.addReview=async()=>{
-    let n=nick.value;
-    let t=text.value;
+/* 💬 ADD REVIEW */
+window.addReview = async()=>{
+    let n = nick.value.trim();
+    let t = text.value.trim();
 
-    if(!n||!t||!stars)return alert("Uzupełnij!");
+    if(!n || !t || !stars){
+        return alert("Uzupełnij wszystkie pola i wybierz gwiazdki!");
+    }
 
     await addDoc(collection(db,"reviews"),{
-        nick:n,text:t,stars
+        nick:n,
+        text:t,
+        stars
     });
 
-    nick.value="";
-    text.value="";
+    nick.value = "";
+    text.value = "";
+    stars = 0;
+
     loadReviews();
 }
 
-/* 💬 REPLY */
-window.addReply=async(id)=>{
-    let v=document.getElementById("r"+id).value;
+/* 💬 ADD REPLY */
+window.addReply = async(id)=>{
+    let v = document.getElementById("r"+id).value.trim();
     if(!v)return;
 
     await addDoc(collection(db,"reviews",id,"replies"),{text:v});
@@ -161,19 +174,19 @@ window.addReply=async(id)=>{
 
 /* 📥 LOAD REVIEWS */
 async function loadReviews(){
-    reviews.innerHTML="";
-    let q=await getDocs(collection(db,"reviews"));
+    reviews.innerHTML = "";
+    let q = await getDocs(collection(db,"reviews"));
 
     q.forEach(d=>{
-        let r=d.data();
+        let r = d.data();
 
-        reviews.innerHTML+=`
-        <div>
-        <b>${r.nick}</b> ⭐${r.stars}<br>${r.text}
-        <br>
-        <input id="r${d.id}">
-        <button onclick="addReply('${d.id}')">↩️</button>
-        <div id="rep${d.id}"></div>
+        reviews.innerHTML += `
+        <div style="margin:10px 0;padding:10px;background:#111827;border-radius:10px;">
+            <b>${r.nick}</b> ⭐${r.stars}<br>${r.text}
+            <br><br>
+            <input id="r${d.id}" placeholder="Odpowiedź...">
+            <button onclick="addReply('${d.id}')">↩️</button>
+            <div id="rep${d.id}"></div>
         </div>
         `;
 
@@ -183,11 +196,13 @@ async function loadReviews(){
 
 /* 📥 LOAD REPLIES */
 async function loadReplies(id){
-    let box=document.getElementById("rep"+id);
-    let q=await getDocs(collection(db,"reviews",id,"replies"));
+    let box = document.getElementById("rep"+id);
+    box.innerHTML = "";
+
+    let q = await getDocs(collection(db,"reviews",id,"replies"));
 
     q.forEach(d=>{
-        box.innerHTML+=`<div class="reply">↳ ${d.data().text}</div>`;
+        box.innerHTML += `<div class="reply">↳ ${d.data().text}</div>`;
     });
 }
 
