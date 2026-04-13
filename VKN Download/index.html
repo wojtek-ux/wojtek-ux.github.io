@@ -2,7 +2,7 @@
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
-<title>VKN Download</title>
+<title>VKN Downloads</title>
 
 <style>
 body {
@@ -22,13 +22,14 @@ h1 {
     font-size:40px;
 }
 
-/* 📦 KARTY */
+/* 📦 KONTENER */
 .container {
     display:flex;
     justify-content:center;
     flex-wrap:wrap;
 }
 
+/* 🧾 KARTA */
 .card {
     background:#1e293b;
     width:260px;
@@ -43,10 +44,11 @@ h1 {
     box-shadow:0 10px 30px rgba(0,0,0,0.5);
 }
 
-/* 🖼️ */
+/* 🖼️ obraz */
 .card img {
     width:100%;
     border-radius:10px;
+    opacity:0.3;
 }
 
 /* 🔘 PRZYCISK */
@@ -54,15 +56,24 @@ h1 {
     display:inline-block;
     margin-top:15px;
     padding:10px 20px;
-    background:cyan;
+    background:gray;
     color:black;
     border-radius:10px;
     text-decoration:none;
     font-weight:bold;
+    pointer-events:none;
 }
 
-.downloadBtn:hover {
-    background:white;
+/* 📞 STOPKA */
+footer {
+    position:fixed;
+    bottom:0;
+    width:100%;
+    background:#020617;
+    color:#aaa;
+    text-align:center;
+    padding:10px;
+    font-size:14px;
 }
 </style>
 </head>
@@ -70,37 +81,43 @@ h1 {
 <body>
 
 <header>
-    <h1>🎮 VKN Download 🎮</h1>
-    <p>Pobierz nasze mody i dodatki lub inne.. 🔥</p>
+    <h1>VKN Downloads</h1>
+    <p>Pobierz nasze projekty python !🔥</p>
 </header>
 
 <div class="container">
 
-    <!-- 🔥 DODATEK 1 -->
+    <!-- 🔲 DODATEK 1 -->
     <div class="card">
-        <img src="dodatek1.png">
-        <h3>Pusty1</h3>
-        <p>Pusty</p>
-        <a href="plik1.zip" class="downloadBtn" download>Pobierz</a>
+        <img src="AIBOT.png">
+        <h3>AI_BOT - 0.1.1</h3>
+        <p>Pisz do chata i ucz go !</p>
+        <a href="AI_BOT - 0.1.1.zip" class="downloadBtn">Pobierz</a>
     </div>
 
-    <!-- 🔥 DODATEK 2 -->
+    <!-- 🔲 DODATEK 2 -->
     <div class="card">
-        <img src="dodatek2.png">
-        <h3>Pusty2</h3>
-        <p>Pusty</p>
-        <a href="plik2.zip" class="downloadBtn" download>Pobierz</a>
+        <img src="brak.png">
+        <h3>Brak dodatku</h3>
+        <p>Opis pojawi się wkrótce...</p>
+        <a class="downloadBtn">Brak</a>
     </div>
 
-    <!-- 🔥 DODATEK 3 -->
+    <!-- 🔲 DODATEK 3 -->
     <div class="card">
-        <img src="dodatek3.png">
-        <h3>Pusty3</h3>
-        <p>Pusty</p>
-        <a href="plik3.zip" class="downloadBtn" download>Pobierz</a>
+        <img src="brak.png">
+        <h3>Brak dodatku</h3>
+        <p>Opis pojawi się wkrótce...</p>
+        <a class="downloadBtn">Brak</a>
     </div>
 
 </div>
+
+<footer>
+    🔒 Wszystkie pliki są w 100% bezpieczne i sprawdzone — brak wirusów ✔️  
+    <br>
+    © VKN 2026
+</footer>
 
 </body>
 </html>
