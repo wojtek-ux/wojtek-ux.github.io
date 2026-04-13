@@ -23,7 +23,7 @@ header { padding:40px; }
 
 .card {
     background:#1e293b;
-    width:300px;
+    width:320px;
     margin:15px;
     padding:20px;
     border-radius:15px;
@@ -61,6 +61,14 @@ header { padding:40px; }
     padding:5px;
 }
 
+/* 📄 przycisk */
+.moreBtn {
+    margin-top:10px;
+    padding:8px 15px;
+    border-radius:10px;
+    cursor:pointer;
+}
+
 /* 📞 */
 footer {
     position:fixed;
@@ -91,7 +99,7 @@ footer {
 
 <div class="downloadBtn" onclick="download()">Pobierz</div>
 
-<!-- ⭐ WYBÓR -->
+<!-- ⭐ -->
 <div class="stars" id="stars">
     <span onclick="setStars(1)">⭐</span>
     <span onclick="setStars(2)">⭐</span>
@@ -100,14 +108,14 @@ footer {
     <span onclick="setStars(5)">⭐</span>
 </div>
 
-<!-- ✍️ OPINIA -->
+<!-- ✍️ -->
 <div class="reviewBox">
     <input id="nick" placeholder="Twój nick">
     <textarea id="text" placeholder="Twoja opinia"></textarea>
     <button onclick="addReview()">Dodaj opinię</button>
 </div>
 
-<!-- 💬 LISTA -->
+<!-- 💬 -->
 <div id="reviews"></div>
 
 </div>
@@ -129,7 +137,7 @@ function download(){
     localStorage.setItem("downloads", downloads);
     document.getElementById("dl").innerText = "📥 Pobrania: " + downloads;
 
-    window.location.href = "AI_BOT - 0.1.1.zip";
+    window.location.href = "AI_BOT-0.1.1.zip";
 }
 
 /* ⭐ OCENA */
@@ -144,7 +152,7 @@ function setStars(n){
     }
 }
 
-/* 💬 OPINIE */
+/* 💬 DODAWANIE */
 function addReview(){
 
     let nick = document.getElementById("nick").value;
@@ -176,11 +184,24 @@ function loadReviews(){
 
     let reviews = JSON.parse(localStorage.getItem("reviews")) || [];
 
-    reviews.forEach(r=>{
+    let limit = 3;
+
+    reviews.slice(0, limit).forEach(r=>{
         box.innerHTML += `
             <p><b>${r.nick}</b> ⭐${r.stars}<br>${r.text}</p>
         `;
     });
+
+    if(reviews.length > limit){
+        box.innerHTML += `
+            <button class="moreBtn" onclick="moreReviews()">Zobacz więcej...</button>
+        `;
+    }
+}
+
+/* 🔁 PRZEJŚCIE */
+function moreReviews(){
+    window.location.href = "opinie.html";
 }
 
 loadReviews();
