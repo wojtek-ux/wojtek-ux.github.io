@@ -89,7 +89,8 @@ footer {
 
 <div id="dl">📥 Pobrania: 0</div>
 
-<a href="AI_BOT - 0.1.1.zip" class="downloadBtn" onclick="download()">Pobierz</a>
+<!-- 🔥 POPRAWIONE POBIERANIE -->
+<a href="#" class="downloadBtn" onclick="download(event)">Pobierz</a>
 
 <div class="stars" id="stars">
     <span onclick="setStars(1)">⭐</span>
@@ -165,8 +166,10 @@ async function loadDownloads(){
     }
 }
 
-/* 📥 POBIERANIE */
-window.download = async function(){
+/* 🔥 FIXED DOWNLOAD */
+window.download = async function(e){
+
+    e.preventDefault(); // 💀 NAJWAŻNIEJSZE
 
     const ref = doc(db, "downloads", "main");
 
@@ -178,7 +181,10 @@ window.download = async function(){
         await setDoc(ref, { count: 1 });
     }
 
-    loadDownloads();
+    await loadDownloads();
+
+    // 🚀 dopiero teraz pobieranie
+    window.location.href = "AI_BOT-0.1.1.zip";
 }
 
 /* ⭐ */
@@ -192,7 +198,7 @@ window.setStars = function(n){
     }
 }
 
-/* 💬 DODAJ */
+/* 💬 OPINIE */
 window.addReview = async function(){
 
     let nick = document.getElementById("nick").value;
@@ -215,7 +221,7 @@ window.addReview = async function(){
     loadReviews();
 }
 
-/* 💬 ODPOWIEDŹ */
+/* 💬 ODPOWIEDZI */
 window.addReply = async function(id){
 
     let input = document.getElementById("reply-"+id);
