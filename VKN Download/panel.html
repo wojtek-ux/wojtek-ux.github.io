@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<title>Panel Admina</title>
+
+<style>
+body {
+    background:#0f172a;
+    color:white;
+    text-align:center;
+    font-family:Arial;
+}
+
+.review {
+    background:#1e293b;
+    margin:15px;
+    padding:15px;
+    border-radius:10px;
+}
+
+.reply {
+    margin-top:5px;
+    font-size:14px;
+    color:#cbd5f5;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🛠️ Panel Admina</h1>
+
+<button onclick="logout()">Wyloguj</button>
+
+<div id="reviews"></div>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, getDocs, deleteDoc, doc } 
+from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+/* 🔒 BLOKADA */
+if(localStorage.getItem("admin") !== "true"){
+    window.location.href = "login.html";
+}
+
+/* 🔥 FIREBASE */
+const firebaseConfig = {
+  apiKey: "AIzaSyAR68Bk1HhJshjCAKJFdF6QWB2e00rNB2k",
+  authDomain: "vkn-opinie.firebaseapp.com",
+  projectId: "vkn-opinie"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+/* 🔓 WYLOGUJ */
+window.logout = function(){
+    localStorage.removeItem("admin");
+    window.location.href = "index.html";
+}
+
+/* 🗑️ USUŃ OPINIĘ */
+window.deleteReview = async function(id){
+    await deleteDoc(doc(db, "reviews", id));
+    loadReviews();
+}
+
+/* 🗑️ USUŃ ODPOWIEDŹ */
+window.deleteReply = async function(reviewId, replyId){
+    await deleteDoc(doc(db, "reviews", reviewId, "replies", replyId));
+    loadReviews();
+}
+
+/* 📥 WCZYTAJ */
+async function loadReviews(){
+
+    let box = document.getElementById("reviews");
+    box.innerHTML = "";
+
+    let querySnapshot = await getDocs(collection(db, "reviews"));
+
+    for (let docSnap of querySnapshot.docs){
+
+        let r = docSnap.data();
+
+        box.innerHTML += `
+        <div class="review">
+            <b>${r.nick}</b> ⭐${r.stars}<br>${r.text}
+            <br>
+            <button onclick="deleteReview('${docSnap.id}')">🗑️ Usuń opinię</button>
+            <div id="replies-${docSnap.id}"></div>
+        </div>
+        `;
+
+        loadReplies(docSnap.id);
+    }
+}
+
+/* 📥 ODPOWIEDZI */
+async function loadReplies(id){
+
+    let box = document.getElementById("replies-"+id);
+
+    let querySnapshot = await getDocs(collection(db, "reviews", id, "replies"));
+
+    querySnapshot.forEach(docSnap=>{
+        let r = docSnap.data();
+
+        box.innerHTML += `
+        <div class="reply">
+            ↳ ${r.text}
+            <button onclick="deleteReply('${id}','${docSnap.id}')">❌</button>
+        </div>
+        `;
+    });
+}
+
+loadReviews();
+
+</script>
+
+</body>
+</html>
