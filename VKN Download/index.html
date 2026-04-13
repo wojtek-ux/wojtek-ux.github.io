@@ -13,7 +13,6 @@ body {
     text-align:center;
 }
 
-/* 🔝 HEADER */
 header {
     padding:40px;
 }
@@ -22,20 +21,21 @@ h1 {
     font-size:40px;
 }
 
-/* 📦 KONTENER */
+/* 📦 */
 .container {
     display:flex;
     justify-content:center;
     flex-wrap:wrap;
 }
 
-/* 🧾 KARTA */
+/* 🧾 */
 .card {
     background:#1e293b;
     width:260px;
     margin:15px;
     padding:20px;
     border-radius:15px;
+    position:relative;
     transition:0.3s;
 }
 
@@ -44,36 +44,69 @@ h1 {
     box-shadow:0 10px 30px rgba(0,0,0,0.5);
 }
 
-/* 🖼️ obraz */
+/* 🔥 NOWOŚĆ */
+.badge {
+    position:absolute;
+    top:10px;
+    left:10px;
+    background:red;
+    padding:5px 10px;
+    border-radius:10px;
+    font-size:12px;
+}
+
+/* 🖼️ */
 .card img {
     width:100%;
     border-radius:10px;
-    opacity:0.3;
 }
 
-/* 🔘 PRZYCISK */
+/* 🔘 */
 .downloadBtn {
     display:inline-block;
     margin-top:15px;
     padding:10px 20px;
-    background:gray;
+    background:cyan;
     color:black;
     border-radius:10px;
     text-decoration:none;
     font-weight:bold;
-    pointer-events:none;
+    cursor:pointer;
 }
 
-/* 📞 STOPKA */
+.downloadBtn:active {
+    transform:scale(0.95);
+}
+
+/* ❌ */
+.disabled {
+    background:gray;
+    pointer-events:none;
+    opacity:0.6;
+}
+
+/* ⭐ */
+.stars {
+    margin-top:10px;
+    font-size:20px;
+    cursor:pointer;
+}
+
+/* 📥 licznik */
+.downloads {
+    margin-top:5px;
+    font-size:14px;
+    opacity:0.7;
+}
+
+/* 📞 */
 footer {
     position:fixed;
     bottom:0;
     width:100%;
     background:#020617;
     color:#aaa;
-    text-align:center;
     padding:10px;
-    font-size:14px;
 }
 </style>
 </head>
@@ -87,37 +120,67 @@ footer {
 
 <div class="container">
 
-    <!-- 🔲 DODATEK 1 -->
+    <!-- ✅ MOD -->
     <div class="card">
+
+        <div class="badge">🔥 NOWOŚĆ</div>
+
         <img src="AIBOT.png">
+
         <h3>AI_BOT - 0.1.1</h3>
         <p>Pisz do chata i ucz go !</p>
-        <a href="AI_BOT - 0.1.1.zip" class="downloadBtn">Pobierz</a>
+
+        <div class="stars" onclick="rate(this)">
+            ⭐⭐⭐⭐⭐
+        </div>
+
+        <div class="downloads" id="dl1">
+            📥 Pobrania: 0
+        </div>
+
+        <a href="AI_BOT-0.1.1.zip" class="downloadBtn" onclick="addDownload()">Pobierz</a>
+
     </div>
 
-    <!-- 🔲 DODATEK 2 -->
+    <!-- ❌ PUSTE -->
     <div class="card">
         <img src="brak.png">
         <h3>Brak dodatku</h3>
         <p>Opis pojawi się wkrótce...</p>
-        <a class="downloadBtn">Brak</a>
-    </div>
-
-    <!-- 🔲 DODATEK 3 -->
-    <div class="card">
-        <img src="brak.png">
-        <h3>Brak dodatku</h3>
-        <p>Opis pojawi się wkrótce...</p>
-        <a class="downloadBtn">Brak</a>
+        <a class="downloadBtn disabled">Brak</a>
     </div>
 
 </div>
 
 <footer>
-    🔒 Wszystkie pliki są w 100% bezpieczne i sprawdzone — brak wirusów ✔️  
-    <br>
-    © VKN 2026
+🔒 Wszystkie pliki są w 100% bezpieczne ✔️  
+<br>
+© VKN 2026
 </footer>
+
+<script>
+
+/* 📥 licznik */
+let downloads = 0;
+
+function addDownload(){
+    downloads++;
+    document.getElementById("dl1").innerText =
+        "📥 Pobrania: " + downloads;
+}
+
+/* ⭐ oceny */
+function rate(el){
+
+    let x = event.offsetX;
+    let width = el.offsetWidth;
+
+    let stars = Math.ceil((x / width) * 5);
+
+    el.innerText = "⭐".repeat(stars);
+}
+
+</script>
 
 </body>
 </html>
