@@ -13,90 +13,52 @@ body {
     text-align:center;
 }
 
-header {
-    padding:40px;
-}
+header { padding:40px; }
 
-h1 {
-    font-size:40px;
-}
-
-/* 📦 */
 .container {
     display:flex;
     justify-content:center;
     flex-wrap:wrap;
 }
 
-/* 🧾 */
 .card {
     background:#1e293b;
-    width:260px;
+    width:300px;
     margin:15px;
     padding:20px;
     border-radius:15px;
-    position:relative;
-    transition:0.3s;
 }
 
-.card:hover {
-    transform:translateY(-10px);
-    box-shadow:0 10px 30px rgba(0,0,0,0.5);
-}
-
-/* 🔥 NOWOŚĆ */
+/* 🔥 */
 .badge {
-    position:absolute;
-    top:10px;
-    left:10px;
     background:red;
     padding:5px 10px;
-    border-radius:10px;
-    font-size:12px;
-}
-
-/* 🖼️ */
-.card img {
-    width:100%;
     border-radius:10px;
 }
 
 /* 🔘 */
 .downloadBtn {
-    display:inline-block;
-    margin-top:15px;
-    padding:10px 20px;
     background:cyan;
-    color:black;
+    padding:10px;
+    display:inline-block;
+    margin-top:10px;
     border-radius:10px;
-    text-decoration:none;
-    font-weight:bold;
     cursor:pointer;
-}
-
-.downloadBtn:active {
-    transform:scale(0.95);
-}
-
-/* ❌ */
-.disabled {
-    background:gray;
-    pointer-events:none;
-    opacity:0.6;
+    color:black;
 }
 
 /* ⭐ */
-.stars {
-    margin-top:10px;
-    font-size:20px;
+.stars span {
+    font-size:25px;
     cursor:pointer;
 }
 
-/* 📥 licznik */
-.downloads {
-    margin-top:5px;
-    font-size:14px;
-    opacity:0.7;
+/* 💬 */
+.reviewBox input,
+.reviewBox textarea {
+    width:90%;
+    margin:5px;
+    padding:5px;
 }
 
 /* 📞 */
@@ -105,7 +67,6 @@ footer {
     bottom:0;
     width:100%;
     background:#020617;
-    color:#aaa;
     padding:10px;
 }
 </style>
@@ -114,71 +75,115 @@ footer {
 <body>
 
 <header>
-    <h1>VKN Downloads</h1>
-    <p>Pobierz nasze projekty python !🔥</p>
+<h1>VKN Downloads</h1>
 </header>
 
 <div class="container">
 
-    <!-- ✅ MOD -->
-    <div class="card">
+<div class="card">
 
-        <div class="badge">🔥 NOWOŚĆ</div>
+<div class="badge">🔥 NOWOŚĆ</div>
 
-        <img src="AIBOT.png">
+<h3>AI_BOT - 0.1.1</h3>
 
-        <h3>AI_BOT - 0.1.1</h3>
-        <p>Pisz do chata i ucz go !</p>
+<!-- 📥 -->
+<div id="dl">📥 Pobrania: 0</div>
 
-        <div class="stars" onclick="rate(this)">
-            ⭐⭐⭐⭐⭐
-        </div>
+<div class="downloadBtn" onclick="download()">Pobierz</div>
 
-        <div class="downloads" id="dl1">
-            📥 Pobrania: 0
-        </div>
+<!-- ⭐ WYBÓR -->
+<div class="stars" id="stars">
+    <span onclick="setStars(1)">⭐</span>
+    <span onclick="setStars(2)">⭐</span>
+    <span onclick="setStars(3)">⭐</span>
+    <span onclick="setStars(4)">⭐</span>
+    <span onclick="setStars(5)">⭐</span>
+</div>
 
-        <a href="AI_BOT - 0.1.1.zip" class="downloadBtn" onclick="addDownload()">Pobierz</a>
+<!-- ✍️ OPINIA -->
+<div class="reviewBox">
+    <input id="nick" placeholder="Twój nick">
+    <textarea id="text" placeholder="Twoja opinia"></textarea>
+    <button onclick="addReview()">Dodaj opinię</button>
+</div>
 
-    </div>
+<!-- 💬 LISTA -->
+<div id="reviews"></div>
 
-    <!-- ❌ PUSTE -->
-    <div class="card">
-        <img src="brak.png">
-        <h3>Brak dodatku</h3>
-        <p>Opis pojawi się wkrótce...</p>
-        <a class="downloadBtn disabled">Brak</a>
-    </div>
+</div>
 
 </div>
 
 <footer>
-🔒 Wszystkie pliki są w 100% bezpieczne ✔️  
-<br>
-© VKN 2026
+🔒 Bezpieczne pliki ✔️<br>© VKN 2026
 </footer>
 
 <script>
 
-/* 📥 licznik */
-let downloads = 0;
+/* 📥 LICZNIK */
+let downloads = localStorage.getItem("downloads") || 0;
+document.getElementById("dl").innerText = "📥 Pobrania: " + downloads;
 
-function addDownload(){
+function download(){
     downloads++;
-    document.getElementById("dl1").innerText =
-        "📥 Pobrania: " + downloads;
+    localStorage.setItem("downloads", downloads);
+    document.getElementById("dl").innerText = "📥 Pobrania: " + downloads;
+
+    window.location.href = "AI_BOT-0.1.1.zip";
 }
 
-/* ⭐ oceny */
-function rate(el){
+/* ⭐ OCENA */
+let selectedStars = 0;
 
-    let x = event.offsetX;
-    let width = el.offsetWidth;
+function setStars(n){
+    selectedStars = n;
+    let stars = document.getElementById("stars").children;
 
-    let stars = Math.ceil((x / width) * 5);
-
-    el.innerText = "⭐".repeat(stars);
+    for(let i=0;i<5;i++){
+        stars[i].style.opacity = i < n ? "1" : "0.3";
+    }
 }
+
+/* 💬 OPINIE */
+function addReview(){
+
+    let nick = document.getElementById("nick").value;
+    let text = document.getElementById("text").value;
+
+    if(!nick || !text || selectedStars == 0){
+        alert("Uzupełnij wszystko!");
+        return;
+    }
+
+    let reviews = JSON.parse(localStorage.getItem("reviews")) || [];
+
+    reviews.push({
+        nick,
+        text,
+        stars: selectedStars
+    });
+
+    localStorage.setItem("reviews", JSON.stringify(reviews));
+
+    loadReviews();
+}
+
+/* 📥 WCZYTANIE */
+function loadReviews(){
+
+    let box = document.getElementById("reviews");
+    box.innerHTML = "";
+
+    let reviews = JSON.parse(localStorage.getItem("reviews")) || [];
+
+    reviews.forEach(r=>{
+        box.innerHTML += `
+            <p><b>${r.nick}</b> ⭐${r.stars}<br>${r.text}</p>
+        `;
+    });
+}
+
+loadReviews();
 
 </script>
 
