@@ -58,7 +58,7 @@ input,textarea{
 
 <div id="dl">📥 Pobrania: 0</div>
 
-<a href="AI_BOT-0.1.1.zip" class="btn" onclick="download(event)">Pobierz</a>
+<a href="#" class="btn" id="downloadBtn">Pobierz</a>
 
 <br><br>
 
@@ -78,13 +78,7 @@ input,textarea{
 
 </div>
 
-<div class="panel" onclick="goPanel()">Panel</div>
-
-<script>
-function goPanel(){
-    location.href="login.html";
-}
-</script>
+<div class="panel" onclick="location.href='login.html'">Panel</div>
 
 <script type="module">
 
@@ -92,6 +86,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/fireba
 import { getFirestore, collection, addDoc, getDocs, doc, getDoc, setDoc, updateDoc, increment } 
 from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
+/* 🔥 FIREBASE */
 const app = initializeApp({
   apiKey:"AIzaSyAR68Bk1HhJshjCAKJFdF6QWB2e00rNB2k",
   projectId:"vkn-opinie"
@@ -99,73 +94,72 @@ const app = initializeApp({
 
 const db = getFirestore(app);
 
-/* ELEMENTY DOM */
+/* 📥 ELEMENTY */
+const btn = document.getElementById("downloadBtn");
 const dl = document.getElementById("dl");
-const reviews = document.getElementById("reviews");
-const nick = document.getElementById("nick");
-const text = document.getElementById("text");
 
 /* 📥 LOAD DOWNLOADS */
 async function loadDL(){
-    const r = doc(db,"downloads","main");
-    const s = await getDoc(r);
+    const ref = doc(db,"downloads","main");
+    const snap = await getDoc(ref);
 
-    if(s.exists()){
-        dl.innerText = "📥 Pobrania: " + s.data().count;
+    if(snap.exists()){
+        dl.innerText = "📥 Pobrania: " + snap.data().count;
     }else{
-        await setDoc(r,{count:0});
-        dl.innerText = "📥 Pobrania: 0";
+        await setDoc(ref,{count:0});
     }
 }
 
-/* 🔥 DOWNLOAD FIX */
-window.download = async(e)=>{
+/* 🚀 DOWNLOAD FIX (NAJWAŻNIEJSZE) */
+btn.addEventListener("click", async (e)=>{
+
     e.preventDefault();
 
-    const r = doc(db,"downloads","main");
+    const ref = doc(db,"downloads","main");
 
     try{
-        await updateDoc(r,{count:increment(1)});
+        await updateDoc(ref,{count:increment(1)});
     }catch{
-        await setDoc(r,{count:1});
+        await setDoc(ref,{count:1});
     }
 
-    await loadDL();
+    // 💀 CZEKAJ aż zapis się zrobi
+    await new Promise(res => setTimeout(res, 800));
 
-    setTimeout(()=>{
-        location.href="AI_BOT-0.1.1.zip";
-    },300);
-}
+    const snap = await getDoc(ref);
+
+    if(snap.exists()){
+        dl.innerText = "📥 Pobrania: " + snap.data().count;
+    }
+
+    // 🚀 dopiero teraz pobieranie
+    window.location.href = "AI_BOT-0.1.1.zip";
+
+});
 
 /* ⭐ */
-let stars = 0;
-window.setStars = n => stars = n;
+let stars=0;
+window.setStars=n=>stars=n;
 
-/* 💬 ADD REVIEW */
-window.addReview = async()=>{
-    let n = nick.value.trim();
-    let t = text.value.trim();
+/* 💬 OPINIE */
+window.addReview=async()=>{
+    let n=nick.value;
+    let t=text.value;
 
-    if(!n || !t || !stars){
-        return alert("Uzupełnij wszystkie pola i wybierz gwiazdki!");
-    }
+    if(!n||!t||!stars)return alert("Uzupełnij!");
 
     await addDoc(collection(db,"reviews"),{
-        nick:n,
-        text:t,
-        stars
+        nick:n,text:t,stars
     });
 
-    nick.value = "";
-    text.value = "";
-    stars = 0;
-
+    nick.value="";
+    text.value="";
     loadReviews();
 }
 
-/* 💬 ADD REPLY */
-window.addReply = async(id)=>{
-    let v = document.getElementById("r"+id).value.trim();
+/* 💬 ODPOWIEDZI */
+window.addReply=async(id)=>{
+    let v=document.getElementById("r"+id).value;
     if(!v)return;
 
     await addDoc(collection(db,"reviews",id,"replies"),{text:v});
@@ -174,19 +168,19 @@ window.addReply = async(id)=>{
 
 /* 📥 LOAD REVIEWS */
 async function loadReviews(){
-    reviews.innerHTML = "";
-    let q = await getDocs(collection(db,"reviews"));
+    reviews.innerHTML="";
+    let q=await getDocs(collection(db,"reviews"));
 
     q.forEach(d=>{
-        let r = d.data();
+        let r=d.data();
 
-        reviews.innerHTML += `
-        <div style="margin:10px 0;padding:10px;background:#111827;border-radius:10px;">
-            <b>${r.nick}</b> ⭐${r.stars}<br>${r.text}
-            <br><br>
-            <input id="r${d.id}" placeholder="Odpowiedź...">
-            <button onclick="addReply('${d.id}')">↩️</button>
-            <div id="rep${d.id}"></div>
+        reviews.innerHTML+=`
+        <div>
+        <b>${r.nick}</b> ⭐${r.stars}<br>${r.text}
+        <br>
+        <input id="r${d.id}">
+        <button onclick="addReply('${d.id}')">↩️</button>
+        <div id="rep${d.id}"></div>
         </div>
         `;
 
@@ -196,16 +190,15 @@ async function loadReviews(){
 
 /* 📥 LOAD REPLIES */
 async function loadReplies(id){
-    let box = document.getElementById("rep"+id);
-    box.innerHTML = "";
-
-    let q = await getDocs(collection(db,"reviews",id,"replies"));
+    let box=document.getElementById("rep"+id);
+    let q=await getDocs(collection(db,"reviews",id,"replies"));
 
     q.forEach(d=>{
-        box.innerHTML += `<div class="reply">↳ ${d.data().text}</div>`;
+        box.innerHTML+=`<div class="reply">↳ ${d.data().text}</div>`;
     });
 }
 
+/* START */
 loadDL();
 loadReviews();
 
