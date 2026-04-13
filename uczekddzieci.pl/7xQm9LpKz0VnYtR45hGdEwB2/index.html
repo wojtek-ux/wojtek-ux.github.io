@@ -2,7 +2,7 @@
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
-<title>Nauka liczb - quiz</title>
+<title>Nauka liczb - słuchanie</title>
 
 <style>
 body {
@@ -13,21 +13,29 @@ body {
     color:white;
 }
 
-/* 🔢 liczba */
-#number {
-    font-size:120px;
-    margin-top:60px;
-    opacity:0;
-    transform:scale(0.5);
-    animation:pop 0.5s forwards;
+h1 {
+    margin-top:40px;
 }
 
-/* ✨ animacja */
-@keyframes pop {
-    to {
-        opacity:1;
-        transform:scale(1);
-    }
+/* 🔊 przyciski */
+.controls {
+    margin-top:20px;
+}
+
+.ctrlBtn {
+    display:inline-block;
+    margin:10px;
+    padding:15px 25px;
+    font-size:25px;
+    background:white;
+    color:black;
+    border-radius:15px;
+    cursor:pointer;
+    transition:0.2s;
+}
+
+.ctrlBtn:hover {
+    transform:scale(1.1);
 }
 
 /* 🎯 wybory */
@@ -61,9 +69,13 @@ body {
 
 <body>
 
-<h1>🔢 Znajdź liczbę 🔢</h1>
+<h1>🔢 Posłuchaj i wybierz 🔢</h1>
 
-<div id="number">0</div>
+<!-- 🔊 kontrolki -->
+<div class="controls">
+    <div class="ctrlBtn" onclick="repeat()">🔊</div>
+    <div class="ctrlBtn" onclick="slow()">🐢</div>
+</div>
 
 <div class="choices">
     <div class="choice" onclick="check(this)"></div>
@@ -78,26 +90,29 @@ body {
 let correct = 0;
 let score = 0;
 
-/* 🔊 głos */
-function speak(text){
+/* 🔊 normalny głos */
+function speak(text, rate=1){
     let msg = new SpeechSynthesisUtterance(text);
     msg.lang = "pl-PL";
+    msg.rate = rate;
     speechSynthesis.cancel();
     speechSynthesis.speak(msg);
+}
+
+/* 🔁 powtórz */
+function repeat(){
+    speak("znajdź liczbę " + correct);
+}
+
+/* 🐢 wolno */
+function slow(){
+    speak("znajdź liczbę " + correct, 0.6);
 }
 
 /* 🎯 nowa runda */
 function newRound(){
 
     correct = Math.floor(Math.random()*101);
-
-    let el = document.getElementById("number");
-
-    el.style.animation = "none";
-    void el.offsetWidth;
-    el.style.animation = "pop 0.5s forwards";
-
-    el.innerText = correct;
 
     speak("znajdź liczbę " + correct);
 
