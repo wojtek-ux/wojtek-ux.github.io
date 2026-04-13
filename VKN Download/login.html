@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<title>Login</title>
+
+<style>
+body {
+    background:#0f172a;
+    color:white;
+    text-align:center;
+    font-family:Arial;
+    margin-top:100px;
+}
+
+input {
+    padding:10px;
+    margin:10px;
+    border-radius:8px;
+    border:none;
+}
+
+button {
+    padding:10px 20px;
+    cursor:pointer;
+    border-radius:10px;
+    border:none;
+    background:red;
+    color:white;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🔐 Panel Admina</h1>
+
+<input type="password" id="pass" placeholder="Hasło">
+<br>
+<button onclick="login()">Zaloguj</button>
+
+<script>
+function login(){
+    let pass = document.getElementById("pass").value;
+
+    if(pass === "Wojtek1608"){
+        localStorage.setItem("admin","true");
+        window.location.href = "panel.html";
+    } else {
+        alert("Złe hasło!");
+    }
+}
+</script>
+
+</body>
+</html>
