@@ -29,14 +29,12 @@ header { padding:40px; }
     border-radius:15px;
 }
 
-/* 🔥 */
 .badge {
     background:red;
     padding:5px 10px;
     border-radius:10px;
 }
 
-/* 🔘 */
 .downloadBtn {
     background:cyan;
     padding:10px;
@@ -45,15 +43,14 @@ header { padding:40px; }
     border-radius:10px;
     cursor:pointer;
     color:black;
+    text-decoration:none;
 }
 
-/* ⭐ */
 .stars span {
     font-size:25px;
     cursor:pointer;
 }
 
-/* 💬 */
 .reviewBox input,
 .reviewBox textarea {
     width:90%;
@@ -61,7 +58,6 @@ header { padding:40px; }
     padding:5px;
 }
 
-/* 📄 przycisk */
 .moreBtn {
     margin-top:10px;
     padding:8px 15px;
@@ -69,7 +65,6 @@ header { padding:40px; }
     cursor:pointer;
 }
 
-/* 📞 */
 footer {
     position:fixed;
     bottom:0;
@@ -97,7 +92,8 @@ footer {
 <!-- 📥 -->
 <div id="dl">📥 Pobrania: 0</div>
 
-<div class="downloadBtn" onclick="download()">Pobierz</div>
+<!-- 🔥 PEWNE POBIERANIE -->
+<a href="AI_BOT-0.1.1.zip" class="downloadBtn" onclick="download()">Pobierz</a>
 
 <!-- ⭐ -->
 <div class="stars" id="stars">
@@ -126,34 +122,48 @@ footer {
 🔒 Bezpieczne pliki ✔️<br>© VKN 2026
 </footer>
 
-<script>
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs } 
+from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+/* 🔥 FIREBASE */
+const firebaseConfig = {
+  apiKey: "AIzaSyAR68Bk1HhJshjCAKJFdF6QWB2e00rNB2k",
+  authDomain: "vkn-opinie.firebaseapp.com",
+  projectId: "vkn-opinie",
+  storageBucket: "vkn-opinie.appspot.com",
+  messagingSenderId: "762125137327",
+  appId: "1:762125137327:web:3fa370c8b8bcd90965ab5a"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
 /* 📥 LICZNIK */
 let downloads = localStorage.getItem("downloads") || 0;
 document.getElementById("dl").innerText = "📥 Pobrania: " + downloads;
 
-function download(){
+window.download = function(){
     downloads++;
     localStorage.setItem("downloads", downloads);
     document.getElementById("dl").innerText = "📥 Pobrania: " + downloads;
-
-    window.location.href = "AI_BOT-0.1.1.zip";
 }
 
-/* ⭐ OCENA */
+/* ⭐ */
 let selectedStars = 0;
 
-function setStars(n){
+window.setStars = function(n){
     selectedStars = n;
     let stars = document.getElementById("stars").children;
-
     for(let i=0;i<5;i++){
         stars[i].style.opacity = i < n ? "1" : "0.3";
     }
 }
 
-/* 💬 DODAWANIE */
-function addReview(){
+/* 💬 DODAJ */
+window.addReview = async function(){
 
     let nick = document.getElementById("nick").value;
     let text = document.getElementById("text").value;
@@ -163,47 +173,51 @@ function addReview(){
         return;
     }
 
-    let reviews = JSON.parse(localStorage.getItem("reviews")) || [];
-
-    reviews.push({
+    await addDoc(collection(db, "reviews"), {
         nick,
         text,
         stars: selectedStars
     });
 
-    localStorage.setItem("reviews", JSON.stringify(reviews));
+    document.getElementById("nick").value = "";
+    document.getElementById("text").value = "";
 
     loadReviews();
 }
 
-/* 📥 WCZYTANIE */
-function loadReviews(){
+/* 📥 WCZYTAJ */
+async function loadReviews(){
 
     let box = document.getElementById("reviews");
     box.innerHTML = "";
 
-    let reviews = JSON.parse(localStorage.getItem("reviews")) || [];
+    let querySnapshot = await getDocs(collection(db, "reviews"));
 
-    let limit = 3;
+    let reviews = [];
 
-    reviews.slice(0, limit).forEach(r=>{
+    querySnapshot.forEach(doc=>{
+        reviews.push(doc.data());
+    });
+
+    reviews.slice(0,3).forEach(r=>{
         box.innerHTML += `
             <p><b>${r.nick}</b> ⭐${r.stars}<br>${r.text}</p>
         `;
     });
 
-    if(reviews.length > limit){
+    if(reviews.length > 3){
         box.innerHTML += `
             <button class="moreBtn" onclick="moreReviews()">Zobacz więcej...</button>
         `;
     }
 }
 
-/* 🔁 PRZEJŚCIE */
-function moreReviews(){
+/* 🔁 */
+window.moreReviews = function(){
     window.location.href = "opinie.html";
 }
 
+/* START */
 loadReviews();
 
 </script>
