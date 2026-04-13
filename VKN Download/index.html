@@ -92,7 +92,7 @@ footer {
 <!-- 📥 -->
 <div id="dl">📥 Pobrania: 0</div>
 
-<!-- 🔥 PEWNE POBIERANIE -->
+<!-- 🔥 POBIERANIE -->
 <a href="AI_BOT-0.1.1.zip" class="downloadBtn" onclick="download()">Pobierz</a>
 
 <!-- ⭐ -->
@@ -125,7 +125,7 @@ footer {
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs } 
+import { getFirestore, collection, addDoc, getDocs, doc, getDoc, setDoc } 
 from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 /* 🔥 FIREBASE */
@@ -141,14 +141,35 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-/* 📥 LICZNIK */
-let downloads = localStorage.getItem("downloads") || 0;
-document.getElementById("dl").innerText = "📥 Pobrania: " + downloads;
+/* 📥 GLOBALNE POBRANIA */
+async function loadDownloads(){
+    const ref = doc(db, "downloads", "main");
+    const snap = await getDoc(ref);
 
-window.download = function(){
-    downloads++;
-    localStorage.setItem("downloads", downloads);
-    document.getElementById("dl").innerText = "📥 Pobrania: " + downloads;
+    if(snap.exists()){
+        document.getElementById("dl").innerText = "📥 Pobrania: " + snap.data().count;
+    } else {
+        await setDoc(ref, { count: 0 });
+        document.getElementById("dl").innerText = "📥 Pobrania: 0";
+    }
+}
+
+window.download = async function(){
+
+    const ref = doc(db, "downloads", "main");
+    const snap = await getDoc(ref);
+
+    let count = 0;
+
+    if(snap.exists()){
+        count = snap.data().count;
+    }
+
+    count++;
+
+    await setDoc(ref, { count: count });
+
+    document.getElementById("dl").innerText = "📥 Pobrania: " + count;
 }
 
 /* ⭐ */
@@ -162,7 +183,7 @@ window.setStars = function(n){
     }
 }
 
-/* 💬 DODAJ */
+/* 💬 OPINIE */
 window.addReview = async function(){
 
     let nick = document.getElementById("nick").value;
@@ -185,7 +206,6 @@ window.addReview = async function(){
     loadReviews();
 }
 
-/* 📥 WCZYTAJ */
 async function loadReviews(){
 
     let box = document.getElementById("reviews");
@@ -212,12 +232,12 @@ async function loadReviews(){
     }
 }
 
-/* 🔁 */
 window.moreReviews = function(){
     window.location.href = "opinie.html";
 }
 
 /* START */
+loadDownloads();
 loadReviews();
 
 </script>
