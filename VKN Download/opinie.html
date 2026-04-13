@@ -6,11 +6,10 @@
 
 <style>
 body {
-    margin:0;
-    font-family:Arial;
     background:#0f172a;
     color:white;
     text-align:center;
+    font-family:Arial;
 }
 
 .review {
@@ -22,24 +21,7 @@ body {
 
 .reply {
     font-size:14px;
-    margin-top:5px;
     color:#cbd5f5;
-}
-
-.replyBox input {
-    width:70%;
-    padding:5px;
-}
-
-button {
-    padding:5px 10px;
-    border-radius:8px;
-    cursor:pointer;
-}
-
-.backBtn {
-    margin:20px;
-    padding:10px 20px;
 }
 </style>
 </head>
@@ -48,50 +30,29 @@ button {
 
 <h1>💬 Wszystkie opinie</h1>
 
-<button class="backBtn" onclick="goBack()">⬅ Powrót</button>
+<button onclick="back()">⬅ Powrót</button>
 
 <div id="allReviews"></div>
 
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, getDocs, addDoc } 
+import { getFirestore, collection, getDocs } 
 from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-/* 🔥 FIREBASE */
 const firebaseConfig = {
   apiKey: "AIzaSyAR68Bk1HhJshjCAKJFdF6QWB2e00rNB2k",
   authDomain: "vkn-opinie.firebaseapp.com",
-  projectId: "vkn-opinie",
-  storageBucket: "vkn-opinie.appspot.com",
-  messagingSenderId: "762125137327",
-  appId: "1:762125137327:web:3fa370c8b8bcd90965ab5a"
+  projectId: "vkn-opinie"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-/* 🔙 */
-window.goBack = function(){
+window.back = function(){
     window.location.href = "index.html";
 }
 
-/* 💬 ODPOWIEDŹ */
-window.addReply = async function(id){
-
-    let input = document.getElementById("reply-"+id);
-    let text = input.value;
-
-    if(!text) return;
-
-    await addDoc(collection(db, "reviews", id, "replies"), {
-        text
-    });
-
-    loadReviews();
-}
-
-/* 📥 WCZYTAJ WSZYSTKO */
 async function loadReviews(){
 
     let box = document.getElementById("allReviews");
@@ -99,32 +60,21 @@ async function loadReviews(){
 
     let querySnapshot = await getDocs(collection(db, "reviews"));
 
-    let reviews = [];
+    for (let docSnap of querySnapshot.docs){
 
-    querySnapshot.forEach(docSnap=>{
-        reviews.push({ id: docSnap.id, ...docSnap.data() });
-    });
-
-    reviews.forEach(r=>{
+        let r = docSnap.data();
 
         box.innerHTML += `
         <div class="review">
             <b>${r.nick}</b> ⭐${r.stars}<br>${r.text}
-
-            <div class="replyBox">
-                <input id="reply-${r.id}" placeholder="Odpowiedz...">
-                <button onclick="addReply('${r.id}')">↩️</button>
-            </div>
-
-            <div id="replies-${r.id}"></div>
+            <div id="replies-${docSnap.id}"></div>
         </div>
         `;
 
-        loadReplies(r.id);
-    });
+        loadReplies(docSnap.id);
+    }
 }
 
-/* 📥 ODPOWIEDZI */
 async function loadReplies(id){
 
     let box = document.getElementById("replies-"+id);
@@ -136,7 +86,6 @@ async function loadReplies(id){
     });
 }
 
-/* START */
 loadReviews();
 
 </script>
