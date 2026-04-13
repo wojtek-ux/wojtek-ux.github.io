@@ -81,7 +81,6 @@ footer {
 </header>
 
 <div class="container">
-
 <div class="card">
 
 <div class="badge">🔥 NOWOŚĆ</div>
@@ -90,7 +89,7 @@ footer {
 
 <div id="dl">📥 Pobrania: 0</div>
 
-<a href="AI_BOT - 0.1.1.zip" class="downloadBtn" onclick="download()">Pobierz</a>
+<a href="AI_BOT-0.1.1.zip" class="downloadBtn" onclick="download()">Pobierz</a>
 
 <div class="stars" id="stars">
     <span onclick="setStars(1)">⭐</span>
@@ -109,7 +108,6 @@ footer {
 <div id="reviews"></div>
 
 </div>
-
 </div>
 
 <footer>
@@ -141,20 +139,20 @@ function goPanel(){
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, doc, getDoc, setDoc } 
+import { getFirestore, collection, addDoc, getDocs, doc, getDoc, setDoc, updateDoc, increment } 
 from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 /* 🔥 CONFIG */
 const firebaseConfig = {
   apiKey: "AIzaSyAR68Bk1HhJshjCAKJFdF6QWB2e00rNB2k",
   authDomain: "vkn-opinie.firebaseapp.com",
-  projectId: "vkn-opinie",
+  projectId: "vkn-opinie"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-/* 📥 POBRANIA */
+/* 📥 LICZNIK */
 async function loadDownloads(){
     const ref = doc(db, "downloads", "main");
     const snap = await getDoc(ref);
@@ -163,18 +161,24 @@ async function loadDownloads(){
         document.getElementById("dl").innerText = "📥 Pobrania: " + snap.data().count;
     } else {
         await setDoc(ref, { count: 0 });
+        document.getElementById("dl").innerText = "📥 Pobrania: 0";
     }
 }
 
+/* 📥 POBIERANIE */
 window.download = async function(){
+
     const ref = doc(db, "downloads", "main");
-    const snap = await getDoc(ref);
 
-    let count = snap.exists() ? snap.data().count : 0;
-    count++;
+    try{
+        await updateDoc(ref, {
+            count: increment(1)
+        });
+    } catch {
+        await setDoc(ref, { count: 1 });
+    }
 
-    await setDoc(ref, { count });
-    document.getElementById("dl").innerText = "📥 Pobrania: " + count;
+    loadDownloads();
 }
 
 /* ⭐ */
