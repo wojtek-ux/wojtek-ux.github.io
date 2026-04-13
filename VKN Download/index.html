@@ -5,37 +5,21 @@
 <title>VKN Downloads</title>
 
 <style>
-body {
+body{
     margin:0;
     font-family:Arial;
     background:#0f172a;
     color:white;
     text-align:center;
 }
-
-header { padding:40px; }
-
-.container {
-    display:flex;
-    justify-content:center;
-    flex-wrap:wrap;
-}
-
-.card {
+.card{
     background:#1e293b;
-    width:340px;
-    margin:15px;
+    width:350px;
+    margin:50px auto;
     padding:20px;
     border-radius:15px;
 }
-
-.badge {
-    background:red;
-    padding:5px 10px;
-    border-radius:10px;
-}
-
-.downloadBtn {
+.btn{
     background:cyan;
     padding:10px;
     display:inline-block;
@@ -45,252 +29,169 @@ header { padding:40px; }
     color:black;
     text-decoration:none;
 }
-
-.stars span {
-    font-size:25px;
-    cursor:pointer;
-}
-
-.reviewBox input,
-.reviewBox textarea {
+input,textarea{
     width:90%;
     margin:5px;
     padding:5px;
 }
-
-.reply {
-    font-size:14px;
-    margin-top:5px;
+.reply{
+    font-size:13px;
     color:#cbd5f5;
 }
-
-footer {
+.panel{
     position:fixed;
-    bottom:0;
-    width:100%;
-    background:#020617;
-    padding:10px;
+    bottom:60px;
+    right:10px;
+    background:red;
+    padding:8px;
+    border-radius:10px;
+    cursor:pointer;
 }
 </style>
 </head>
 
 <body>
 
-<header>
-<h1>VKN Downloads</h1>
-</header>
-
-<div class="container">
 <div class="card">
 
-<div class="badge">🔥 NOWOŚĆ</div>
-
-<h3>AI_BOT - 0.1.1</h3>
+<h2>AI_BOT</h2>
 
 <div id="dl">📥 Pobrania: 0</div>
 
-<!-- 🔥 POPRAWIONE POBIERANIE -->
-<a href="#" class="downloadBtn" onclick="download(event)">Pobierz</a>
+<a href="#" class="btn" onclick="download(event)">Pobierz</a>
 
-<div class="stars" id="stars">
-    <span onclick="setStars(1)">⭐</span>
-    <span onclick="setStars(2)">⭐</span>
-    <span onclick="setStars(3)">⭐</span>
-    <span onclick="setStars(4)">⭐</span>
-    <span onclick="setStars(5)">⭐</span>
+<br><br>
+
+<div id="stars">
+<span onclick="setStars(1)">⭐</span>
+<span onclick="setStars(2)">⭐</span>
+<span onclick="setStars(3)">⭐</span>
+<span onclick="setStars(4)">⭐</span>
+<span onclick="setStars(5)">⭐</span>
 </div>
 
-<div class="reviewBox">
-    <input id="nick" placeholder="Twój nick">
-    <textarea id="text" placeholder="Twoja opinia"></textarea>
-    <button onclick="addReview()">Dodaj opinię</button>
-</div>
+<input id="nick" placeholder="Nick">
+<textarea id="text" placeholder="Opinia"></textarea>
+<button onclick="addReview()">Dodaj</button>
 
 <div id="reviews"></div>
 
 </div>
-</div>
 
-<footer>
-🔒 Bezpieczne pliki ✔️<br>© VKN 2026
-</footer>
-
-<!-- 🔴 PANEL -->
-<button onclick="goPanel()" style="
-position:fixed;
-bottom:60px;
-right:10px;
-background:red;
-color:white;
-padding:8px 12px;
-border-radius:10px;
-cursor:pointer;
-z-index:999;
-">
-Panel
-</button>
+<div class="panel" onclick="goPanel()">Panel</div>
 
 <script>
 function goPanel(){
-    window.location.href = "login.html";
+    location.href="login.html";
 }
 </script>
 
-<!-- 🔥 FIREBASE -->
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getFirestore, collection, addDoc, getDocs, doc, getDoc, setDoc, updateDoc, increment } 
 from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-/* 🔥 CONFIG */
-const firebaseConfig = {
-  apiKey: "AIzaSyAR68Bk1HhJshjCAKJFdF6QWB2e00rNB2k",
-  authDomain: "vkn-opinie.firebaseapp.com",
-  projectId: "vkn-opinie"
-};
+const app = initializeApp({
+  apiKey:"AIzaSyAR68Bk1HhJshjCAKJFdF6QWB2e00rNB2k",
+  projectId:"vkn-opinie"
+});
 
-const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-/* 📥 LICZNIK */
-async function loadDownloads(){
-    const ref = doc(db, "downloads", "main");
-    const snap = await getDoc(ref);
+/* 📥 LOAD DOWNLOADS */
+async function loadDL(){
+    const r=doc(db,"downloads","main");
+    const s=await getDoc(r);
 
-    if(snap.exists()){
-        document.getElementById("dl").innerText = "📥 Pobrania: " + snap.data().count;
-    } else {
-        await setDoc(ref, { count: 0 });
-        document.getElementById("dl").innerText = "📥 Pobrania: 0";
+    if(s.exists()){
+        dl.innerText="📥 Pobrania: "+s.data().count;
+    }else{
+        await setDoc(r,{count:0});
     }
 }
 
-/* 🔥 FIXED DOWNLOAD */
-window.download = async function(e){
+/* 🔥 DOWNLOAD FIX */
+window.download=async(e)=>{
+    e.preventDefault();
 
-    e.preventDefault(); // 💀 NAJWAŻNIEJSZE
-
-    const ref = doc(db, "downloads", "main");
+    const r=doc(db,"downloads","main");
 
     try{
-        await updateDoc(ref, {
-            count: increment(1)
-        });
-    } catch {
-        await setDoc(ref, { count: 1 });
+        await updateDoc(r,{count:increment(1)});
+    }catch{
+        await setDoc(r,{count:1});
     }
 
-    await loadDownloads();
+    await loadDL();
 
-    // 🚀 dopiero teraz pobieranie
-    window.location.href = "AI_BOT-0.1.1.zip";
+    setTimeout(()=>{
+        location.href="AI_BOT-0.1.1.zip";
+    },300);
 }
 
 /* ⭐ */
-let selectedStars = 0;
+let stars=0;
+window.setStars=n=>stars=n;
 
-window.setStars = function(n){
-    selectedStars = n;
-    let stars = document.getElementById("stars").children;
-    for(let i=0;i<5;i++){
-        stars[i].style.opacity = i < n ? "1" : "0.3";
-    }
-}
+/* 💬 ADD */
+window.addReview=async()=>{
+    let n=nick.value;
+    let t=text.value;
 
-/* 💬 OPINIE */
-window.addReview = async function(){
+    if(!n||!t||!stars)return alert("Uzupełnij!");
 
-    let nick = document.getElementById("nick").value;
-    let text = document.getElementById("text").value;
-
-    if(!nick || !text || selectedStars == 0){
-        alert("Uzupełnij wszystko!");
-        return;
-    }
-
-    await addDoc(collection(db, "reviews"), {
-        nick,
-        text,
-        stars: selectedStars
+    await addDoc(collection(db,"reviews"),{
+        nick:n,text:t,stars
     });
 
-    document.getElementById("nick").value = "";
-    document.getElementById("text").value = "";
-
+    nick.value="";
+    text.value="";
     loadReviews();
 }
 
-/* 💬 ODPOWIEDZI */
-window.addReply = async function(id){
+/* 💬 REPLY */
+window.addReply=async(id)=>{
+    let v=document.getElementById("r"+id).value;
+    if(!v)return;
 
-    let input = document.getElementById("reply-"+id);
-    let text = input.value;
-
-    if(!text) return;
-
-    await addDoc(collection(db, "reviews", id, "replies"), {
-        text
-    });
-
+    await addDoc(collection(db,"reviews",id,"replies"),{text:v});
     loadReviews();
 }
 
-/* 📥 WCZYTAJ */
+/* 📥 LOAD REVIEWS */
 async function loadReviews(){
+    reviews.innerHTML="";
+    let q=await getDocs(collection(db,"reviews"));
 
-    let box = document.getElementById("reviews");
-    box.innerHTML = "";
+    q.forEach(d=>{
+        let r=d.data();
 
-    let querySnapshot = await getDocs(collection(db, "reviews"));
-
-    let reviews = [];
-
-    querySnapshot.forEach(docSnap=>{
-        reviews.push({ id: docSnap.id, ...docSnap.data() });
-    });
-
-    reviews.slice(0,3).forEach(r=>{
-
-        box.innerHTML += `
-        <div style="background:#0f172a;padding:10px;margin:10px;border-radius:10px;">
-            <b>${r.nick}</b> ⭐${r.stars}<br>${r.text}
-
-            <div>
-                <input id="reply-${r.id}" placeholder="Odpowiedz...">
-                <button onclick="addReply('${r.id}')">↩️</button>
-            </div>
-
-            <div id="replies-${r.id}"></div>
+        reviews.innerHTML+=`
+        <div>
+        <b>${r.nick}</b> ⭐${r.stars}<br>${r.text}
+        <br>
+        <input id="r${d.id}">
+        <button onclick="addReply('${d.id}')">↩️</button>
+        <div id="rep${d.id}"></div>
         </div>
         `;
 
-        loadReplies(r.id);
+        loadReplies(d.id);
     });
-
-    if(reviews.length > 3){
-        box.innerHTML += `
-        <button onclick="window.location.href='opinie.html'">
-        Zobacz więcej...
-        </button>
-        `;
-    }
 }
 
-/* 📥 ODPOWIEDZI */
+/* 📥 LOAD REPLIES */
 async function loadReplies(id){
+    let box=document.getElementById("rep"+id);
+    let q=await getDocs(collection(db,"reviews",id,"replies"));
 
-    let box = document.getElementById("replies-"+id);
-
-    let querySnapshot = await getDocs(collection(db, "reviews", id, "replies"));
-
-    querySnapshot.forEach(doc=>{
-        box.innerHTML += `<div class="reply">↳ ${doc.data().text}</div>`;
+    q.forEach(d=>{
+        box.innerHTML+=`<div class="reply">↳ ${d.data().text}</div>`;
     });
 }
 
-/* START */
-loadDownloads();
+loadDL();
 loadReviews();
 
 </script>
