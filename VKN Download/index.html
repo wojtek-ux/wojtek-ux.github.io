@@ -23,7 +23,7 @@ header { padding:40px; }
 
 .card {
     background:#1e293b;
-    width:320px;
+    width:340px;
     margin:15px;
     padding:20px;
     border-radius:15px;
@@ -65,6 +65,17 @@ header { padding:40px; }
     cursor:pointer;
 }
 
+.replyBox input {
+    width:70%;
+    padding:5px;
+}
+
+.reply {
+    font-size:14px;
+    margin-top:5px;
+    color:#cbd5f5;
+}
+
 footer {
     position:fixed;
     bottom:0;
@@ -89,13 +100,10 @@ footer {
 
 <h3>AI_BOT - 0.1.1</h3>
 
-<!-- 📥 -->
 <div id="dl">📥 Pobrania: 0</div>
 
-<!-- 🔥 POBIERANIE -->
-<a href="AI_BOT-0.1.1.zip" class="downloadBtn" onclick="download()">Pobierz</a>
+<a href="AI_BOT - 0.1.1.zip" class="downloadBtn" onclick="download()">Pobierz</a>
 
-<!-- ⭐ -->
 <div class="stars" id="stars">
     <span onclick="setStars(1)">⭐</span>
     <span onclick="setStars(2)">⭐</span>
@@ -104,14 +112,12 @@ footer {
     <span onclick="setStars(5)">⭐</span>
 </div>
 
-<!-- ✍️ -->
 <div class="reviewBox">
     <input id="nick" placeholder="Twój nick">
     <textarea id="text" placeholder="Twoja opinia"></textarea>
     <button onclick="addReview()">Dodaj opinię</button>
 </div>
 
-<!-- 💬 -->
 <div id="reviews"></div>
 
 </div>
@@ -141,7 +147,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-/* 📥 GLOBALNE POBRANIA */
+/* 📥 POBRANIA */
 async function loadDownloads(){
     const ref = doc(db, "downloads", "main");
     const snap = await getDoc(ref);
@@ -150,25 +156,17 @@ async function loadDownloads(){
         document.getElementById("dl").innerText = "📥 Pobrania: " + snap.data().count;
     } else {
         await setDoc(ref, { count: 0 });
-        document.getElementById("dl").innerText = "📥 Pobrania: 0";
     }
 }
 
 window.download = async function(){
-
     const ref = doc(db, "downloads", "main");
     const snap = await getDoc(ref);
 
-    let count = 0;
-
-    if(snap.exists()){
-        count = snap.data().count;
-    }
-
+    let count = snap.exists() ? snap.data().count : 0;
     count++;
 
-    await setDoc(ref, { count: count });
-
+    await setDoc(ref, { count });
     document.getElementById("dl").innerText = "📥 Pobrania: " + count;
 }
 
@@ -183,7 +181,7 @@ window.setStars = function(n){
     }
 }
 
-/* 💬 OPINIE */
+/* 💬 DODAJ OPINIĘ */
 window.addReview = async function(){
 
     let nick = document.getElementById("nick").value;
@@ -206,6 +204,22 @@ window.addReview = async function(){
     loadReviews();
 }
 
+/* 💬 ODPOWIEDŹ */
+window.addReply = async function(id){
+
+    let input = document.getElementById("reply-"+id);
+    let text = input.value;
+
+    if(!text) return;
+
+    await addDoc(collection(db, "reviews", id, "replies"), {
+        text
+    });
+
+    loadReviews();
+}
+
+/* 📥 WCZYTAJ */
 async function loadReviews(){
 
     let box = document.getElementById("reviews");
@@ -215,14 +229,26 @@ async function loadReviews(){
 
     let reviews = [];
 
-    querySnapshot.forEach(doc=>{
-        reviews.push(doc.data());
+    querySnapshot.forEach(docSnap=>{
+        reviews.push({ id: docSnap.id, ...docSnap.data() });
     });
 
     reviews.slice(0,3).forEach(r=>{
+
         box.innerHTML += `
-            <p><b>${r.nick}</b> ⭐${r.stars}<br>${r.text}</p>
+        <div style="background:#0f172a;padding:10px;margin:10px;border-radius:10px;">
+            <b>${r.nick}</b> ⭐${r.stars}<br>${r.text}
+
+            <div class="replyBox">
+                <input id="reply-${r.id}" placeholder="Odpowiedz...">
+                <button onclick="addReply('${r.id}')">↩️</button>
+            </div>
+
+            <div id="replies-${r.id}"></div>
+        </div>
         `;
+
+        loadReplies(r.id);
     });
 
     if(reviews.length > 3){
@@ -232,6 +258,19 @@ async function loadReviews(){
     }
 }
 
+/* 📥 ODPOWIEDZI */
+async function loadReplies(id){
+
+    let box = document.getElementById("replies-"+id);
+
+    let querySnapshot = await getDocs(collection(db, "reviews", id, "replies"));
+
+    querySnapshot.forEach(doc=>{
+        box.innerHTML += `<div class="reply">↳ ${doc.data().text}</div>`;
+    });
+}
+
+/* 🔁 */
 window.moreReviews = function(){
     window.location.href = "opinie.html";
 }
