@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<title>Nauka liczb - quiz</title>
+
+<style>
+body {
+    margin:0;
+    font-family:Arial;
+    text-align:center;
+    background:linear-gradient(135deg,#fbc2eb,#a6c1ee);
+    color:white;
+}
+
+/* 🔢 liczba */
+#number {
+    font-size:120px;
+    margin-top:60px;
+    opacity:0;
+    transform:scale(0.5);
+    animation:pop 0.5s forwards;
+}
+
+/* ✨ animacja */
+@keyframes pop {
+    to {
+        opacity:1;
+        transform:scale(1);
+    }
+}
+
+/* 🎯 wybory */
+.choices {
+    margin-top:50px;
+}
+
+.choice {
+    display:inline-block;
+    margin:10px;
+    padding:20px 30px;
+    font-size:30px;
+    background:white;
+    color:black;
+    border-radius:15px;
+    cursor:pointer;
+    transition:0.2s;
+}
+
+.choice:hover {
+    transform:scale(1.1);
+}
+
+/* ⭐ wynik */
+#score {
+    margin-top:20px;
+    font-size:20px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🔢 Znajdź liczbę 🔢</h1>
+
+<div id="number">0</div>
+
+<div class="choices">
+    <div class="choice" onclick="check(this)"></div>
+    <div class="choice" onclick="check(this)"></div>
+    <div class="choice" onclick="check(this)"></div>
+</div>
+
+<div id="score">⭐ 0</div>
+
+<script>
+
+let correct = 0;
+let score = 0;
+
+/* 🔊 głos */
+function speak(text){
+    let msg = new SpeechSynthesisUtterance(text);
+    msg.lang = "pl-PL";
+    speechSynthesis.cancel();
+    speechSynthesis.speak(msg);
+}
+
+/* 🎯 nowa runda */
+function newRound(){
+
+    correct = Math.floor(Math.random()*101);
+
+    let el = document.getElementById("number");
+
+    el.style.animation = "none";
+    void el.offsetWidth;
+    el.style.animation = "pop 0.5s forwards";
+
+    el.innerText = correct;
+
+    speak("znajdź liczbę " + correct);
+
+    let choices = document.querySelectorAll(".choice");
+
+    let nums = [correct];
+
+    while(nums.length < 3){
+        let n = Math.floor(Math.random()*101);
+        if(!nums.includes(n)) nums.push(n);
+    }
+
+    nums.sort(()=>Math.random()-0.5);
+
+    choices.forEach((c,i)=>{
+        c.innerText = nums[i];
+    });
+}
+
+/* ✔️ sprawdzanie */
+function check(el){
+
+    if(Number(el.innerText) === correct){
+        score++;
+        speak("dobrze!");
+    } else {
+        speak("spróbuj jeszcze raz");
+    }
+
+    document.getElementById("score").innerText = "⭐ " + score;
+
+    setTimeout(newRound, 1000);
+}
+
+/* start */
+newRound();
+
+</script>
+
+</body>
+</html>
