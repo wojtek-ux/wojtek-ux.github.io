@@ -4,8 +4,6 @@
 <meta charset="UTF-8">
 <title>Roblox Live Players</title>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 <style>
 body{
     background:#0f172a;
@@ -19,132 +17,49 @@ body{
     margin:20px;
     color:#22c55e;
 }
-
-.info{
-    color:#aaa;
-    margin-bottom:20px;
-}
-
-canvas{
-    max-width:600px;
-    margin:auto;
-}
 </style>
-
 </head>
+
 <body>
 
 <h1>🎮 Roblox Live Players</h1>
 
 <div class="big" id="total">0</div>
 
-<div class="info">
-📊 Szacowana liczba graczy (pseudo live)
-</div>
-
-<canvas id="chart"></canvas>
-
 <script>
 
-let displayed = 1800000; // startowa realistyczna liczba
-let chart;
-let dataPoints = [];
-let labels = [];
+// 🔥 start albo zapis
+let displayed = parseInt(localStorage.getItem("players")) || 90000000;
+let adds = parseInt(localStorage.getItem("adds")) || 0;
 
-/* 🔥 płynna animacja do targetu */
-function smoothIncrease(target){
-
-    let speed = (target - displayed) / 50;
-
-    let interval = setInterval(()=>{
-        displayed += speed;
-
-        if(Math.abs(target - displayed) < 10){
-            displayed = target;
-            clearInterval(interval);
-        }
-
-        updateDisplay();
-
-    }, 50);
-}
-
-/* 🔥 update UI */
-function updateDisplay(){
+// 🔥 update UI
+function update(){
     document.getElementById("total").innerText =
-        "👥 " + Math.floor(displayed).toLocaleString();
+        "👥 " + displayed.toLocaleString();
 }
 
-/* 🔥 pseudo realistyczna liczba */
-function generatePlayers(){
-
-    let base = 1800000;
-    let random = Math.floor(Math.random()*100000);
-
-    return base + random;
-}
-
-/* 🔥 główny update */
-function load(){
-
-    let totalPlayers = generatePlayers();
-
-    smoothIncrease(totalPlayers);
-
-    let time = new Date().toLocaleTimeString();
-
-    labels.push(time);
-    dataPoints.push(totalPlayers);
-
-    if(labels.length > 12){
-        labels.shift();
-        dataPoints.shift();
-    }
-
-    if(!chart){
-        chart = new Chart(document.getElementById("chart"), {
-            type: "line",
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: "Gracze",
-                    data: dataPoints,
-                    borderWidth: 2,
-                    tension: 0.3
-                }]
-            }
-        });
-    } else {
-        chart.data.labels = labels;
-        chart.data.datasets[0].data = dataPoints;
-        chart.update();
-    }
-}
-
-/* 🔥 mikro ruch (REALISTYCZNY TREND) */
+// 🔥 główna logika
 setInterval(()=>{
-    let trend = Math.random() > 0.5 ? 5 : -3;
 
-    displayed += trend + Math.random()*5;
+    displayed += 200;
+    adds++;
 
-    // 🚫 MIN
-    if(displayed < 1500000){
-        displayed = 1500000;
+    // 💀 co 500 dodaniach odejmij
+    if(adds >= 500){
+        displayed -= 700;
+        adds = 0;
     }
 
-    // 🚫 MAX
-    if(displayed > 2500000){
-        displayed = 2500000;
-    }
+    // 🔥 zapisz
+    localStorage.setItem("players", displayed);
+    localStorage.setItem("adds", adds);
 
-    updateDisplay();
+    update();
 
-}, 200);
+}, 2000);
 
-/* 🔄 główne odświeżanie */
-setInterval(load, 5000);
-
-load();
+// start
+update();
 
 </script>
 
