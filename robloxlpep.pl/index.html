@@ -74,13 +74,29 @@ function animateNumber(start, end, duration){
 
 async function load(){
 
+async function load(){
+
     let totalPlayers = 0;
 
-    let res = await fetch("https://games.roblox.com/v1/games/list?model.keyword=&model.maxRows=50");
+    // 🔥 TOP gry Roblox (pewne ID)
+    let universeIds = [
+        2753915549, // Blox Fruits
+        142823291,  // Murder Mystery
+        537413528,  // Build A Boat
+        6284583030, // Pet Simulator
+        920587237,  // Adopt Me
+        8737602449, // Brookhaven
+        606849621   // Jailbreak
+    ];
+
+    let res = await fetch(
+        "https://games.roproxy.com/v1/games?universeIds=" + universeIds.join(",")
+    );
+
     let data = await res.json();
 
-    data.games.forEach(g=>{
-        totalPlayers += g.playerCount;
+    data.data.forEach(g=>{
+        totalPlayers += g.playing;
     });
 
     let prev = parseInt(
@@ -118,12 +134,3 @@ async function load(){
         chart.update();
     }
 }
-
-setInterval(load, 5000);
-
-load();
-
-</script>
-
-</body>
-</html>
