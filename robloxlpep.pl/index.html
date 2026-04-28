@@ -2,7 +2,7 @@
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
-<title>Roblox Live Players🧨</title>
+<title>Roblox Live Players</title>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -18,13 +18,11 @@ body{
     font-size:50px;
     margin:20px;
     color:#22c55e;
-    transition:0.3s;
 }
 
 .info{
     color:#aaa;
     margin-bottom:20px;
-    font-size:14px;
 }
 
 canvas{
@@ -41,76 +39,59 @@ canvas{
 <div class="big" id="total">0</div>
 
 <div class="info">
-📊 Szacowana liczba graczy na podstawie 50+ popularnych gier
+📊 Szacowana liczba graczy (pseudo live)
 </div>
 
 <canvas id="chart"></canvas>
 
 <script>
 
+let displayed = 0;
 let chart;
 let dataPoints = [];
 let labels = [];
 
-function animateNumber(start, end, duration){
-    let range = end - start;
-    let startTime = Date.now();
+/* 🔥 płynny licznik */
+function smoothIncrease(target){
 
-    function update(){
-        let now = Date.now();
-        let progress = Math.min((now - startTime) / duration, 1);
-        let value = Math.floor(start + range * progress);
+    let speed = (target - displayed) / 50;
+
+    let interval = setInterval(()=>{
+        displayed += speed;
+
+        if(Math.abs(target - displayed) < 10){
+            displayed = target;
+            clearInterval(interval);
+        }
 
         document.getElementById("total").innerText =
-            "👥 " + value.toLocaleString();
+            "👥 " + Math.floor(displayed).toLocaleString();
 
-        if(progress < 1){
-            requestAnimationFrame(update);
-        }
-    }
-
-    update();
+    }, 50);
 }
 
-async function load(){
+/* 🔥 pseudo dane */
+function generatePlayers(){
 
-async function load(){
+    let base = 1800000; // baza
+    let random = Math.floor(Math.random()*100000);
 
-    let totalPlayers = 0;
+    return base + random;
+}
 
-    // 🔥 TOP gry Roblox (pewne ID)
-    let universeIds = [
-        2753915549, // Blox Fruits
-        142823291,  // Murder Mystery
-        537413528,  // Build A Boat
-        6284583030, // Pet Simulator
-        920587237,  // Adopt Me
-        8737602449, // Brookhaven
-        606849621   // Jailbreak
-    ];
+/* 🔥 update */
+function load(){
 
-    let res = await fetch(
-        "https://games.roproxy.com/v1/games?universeIds=" + universeIds.join(",")
-    );
+    let totalPlayers = generatePlayers();
 
-    let data = await res.json();
-
-    data.data.forEach(g=>{
-        totalPlayers += g.playing;
-    });
-
-    let prev = parseInt(
-        document.getElementById("total").innerText.replace(/\D/g,'')
-    ) || 0;
-
-    animateNumber(prev, totalPlayers, 800);
+    smoothIncrease(totalPlayers);
 
     let time = new Date().toLocaleTimeString();
 
     labels.push(time);
     dataPoints.push(totalPlayers);
 
-    if(labels.length > 10){
+    if(labels.length > 12){
         labels.shift();
         dataPoints.shift();
     }
@@ -134,3 +115,20 @@ async function load(){
         chart.update();
     }
 }
+
+/* 🔥 mikro ruch (żeby wyglądało ultra real) */
+setInterval(()=>{
+    displayed += Math.random()*20 - 10;
+    document.getElementById("total").innerText =
+        "👥 " + Math.floor(displayed).toLocaleString();
+}, 200);
+
+/* 🔄 większe update */
+setInterval(load, 5000);
+
+load();
+
+</script>
+
+</body>
+</html>
