@@ -30,8 +30,8 @@ canvas{
     margin:auto;
 }
 </style>
-</head>
 
+</head>
 <body>
 
 <h1>🎮 Roblox Live Players</h1>
@@ -46,12 +46,12 @@ canvas{
 
 <script>
 
-let displayed = 0;
+let displayed = 1800000; // startowa realistyczna liczba
 let chart;
 let dataPoints = [];
 let labels = [];
 
-/* 🔥 płynny licznik */
+/* 🔥 płynna animacja do targetu */
 function smoothIncrease(target){
 
     let speed = (target - displayed) / 50;
@@ -64,22 +64,27 @@ function smoothIncrease(target){
             clearInterval(interval);
         }
 
-        document.getElementById("total").innerText =
-            "👥 " + Math.floor(displayed).toLocaleString();
+        updateDisplay();
 
     }, 50);
 }
 
-/* 🔥 pseudo dane */
+/* 🔥 update UI */
+function updateDisplay(){
+    document.getElementById("total").innerText =
+        "👥 " + Math.floor(displayed).toLocaleString();
+}
+
+/* 🔥 pseudo realistyczna liczba */
 function generatePlayers(){
 
-    let base = 1800000; // baza
+    let base = 1800000;
     let random = Math.floor(Math.random()*100000);
 
     return base + random;
 }
 
-/* 🔥 update */
+/* 🔥 główny update */
 function load(){
 
     let totalPlayers = generatePlayers();
@@ -116,14 +121,27 @@ function load(){
     }
 }
 
-/* 🔥 mikro ruch (żeby wyglądało ultra real) */
+/* 🔥 mikro ruch (REALISTYCZNY TREND) */
 setInterval(()=>{
-    displayed += Math.random()*20 - 10;
-    document.getElementById("total").innerText =
-        "👥 " + Math.floor(displayed).toLocaleString();
+    let trend = Math.random() > 0.5 ? 5 : -3;
+
+    displayed += trend + Math.random()*5;
+
+    // 🚫 MIN
+    if(displayed < 1500000){
+        displayed = 1500000;
+    }
+
+    // 🚫 MAX
+    if(displayed > 2500000){
+        displayed = 2500000;
+    }
+
+    updateDisplay();
+
 }, 200);
 
-/* 🔄 większe update */
+/* 🔄 główne odświeżanie */
 setInterval(load, 5000);
 
 load();
