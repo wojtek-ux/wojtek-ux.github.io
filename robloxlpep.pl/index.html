@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<title>Roblox Live Players</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+body{
+    background:#0f172a;
+    color:white;
+    font-family:Arial;
+    text-align:center;
+}
+
+.big{
+    font-size:50px;
+    margin:20px;
+    color:#22c55e;
+    transition:0.3s;
+}
+
+.info{
+    color:#aaa;
+    margin-bottom:20px;
+    font-size:14px;
+}
+
+canvas{
+    max-width:600px;
+    margin:auto;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🎮 Roblox Live Players</h1>
+
+<div class="big" id="total">0</div>
+
+<div class="info">
+📊 Szacowana liczba graczy na podstawie 50+ popularnych gier
+</div>
+
+<canvas id="chart"></canvas>
+
+<script>
+
+let chart;
+let dataPoints = [];
+let labels = [];
+
+function animateNumber(start, end, duration){
+    let range = end - start;
+    let startTime = Date.now();
+
+    function update(){
+        let now = Date.now();
+        let progress = Math.min((now - startTime) / duration, 1);
+        let value = Math.floor(start + range * progress);
+
+        document.getElementById("total").innerText =
+            "👥 " + value.toLocaleString();
+
+        if(progress < 1){
+            requestAnimationFrame(update);
+        }
+    }
+
+    update();
+}
+
+async function load(){
+
+    let totalPlayers = 0;
+
+    let res = await fetch("https://games.roblox.com/v1/games/list?model.keyword=&model.maxRows=50");
+    let data = await res.json();
+
+    data.games.forEach(g=>{
+        totalPlayers += g.playerCount;
+    });
+
+    let prev = parseInt(
+        document.getElementById("total").innerText.replace(/\D/g,'')
+    ) || 0;
+
+    animateNumber(prev, totalPlayers, 800);
+
+    let time = new Date().toLocaleTimeString();
+
+    labels.push(time);
+    dataPoints.push(totalPlayers);
+
+    if(labels.length > 10){
+        labels.shift();
+        dataPoints.shift();
+    }
+
+    if(!chart){
+        chart = new Chart(document.getElementById("chart"), {
+            type: "line",
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: "Gracze",
+                    data: dataPoints,
+                    borderWidth: 2,
+                    tension: 0.3
+                }]
+            }
+        });
+    } else {
+        chart.data.labels = labels;
+        chart.data.datasets[0].data = dataPoints;
+        chart.update();
+    }
+}
+
+setInterval(load, 5000);
+
+load();
+
+</script>
+
+</body>
+</html>
