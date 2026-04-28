@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <title>Roblox Live Players</title>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <style>
 body{
     background:#0f172a;
@@ -13,9 +15,14 @@ body{
 }
 
 .big{
-    font-size:50px;
+    font-size:55px;
     margin:20px;
     color:#22c55e;
+}
+
+canvas{
+    max-width:700px;
+    margin:auto;
 }
 </style>
 </head>
@@ -26,40 +33,115 @@ body{
 
 <div class="big" id="total">0</div>
 
+<canvas id="chart"></canvas>
+
 <script>
 
-// 🔥 start albo zapis
+// 🔥 dane startowe (zapis)
 let displayed = parseInt(localStorage.getItem("players")) || 90000000;
 let adds = parseInt(localStorage.getItem("adds")) || 0;
 
+// 🔥 wykres
+let chart;
+let labels = [];
+let playerData = [];
+let gameData = [];
+
+// 🔥 animacja płynna
+function animateTo(target){
+
+    let start = displayed;
+    let diff = target - start;
+    let startTime = Date.now();
+
+    function frame(){
+        let progress = (Date.now() - startTime) / 800;
+        if(progress > 1) progress = 1;
+
+        displayed = Math.floor(start + diff * progress);
+
+        updateDisplay();
+
+        if(progress < 1){
+            requestAnimationFrame(frame);
+        }
+    }
+
+    frame();
+}
+
 // 🔥 update UI
-function update(){
+function updateDisplay(){
     document.getElementById("total").innerText =
         "👥 " + displayed.toLocaleString();
 }
 
 // 🔥 główna logika
-setInterval(()=>{
+function tick(){
 
-    displayed += 200;
+    let target = displayed + 200;
     adds++;
 
-    // 💀 co 500 dodaniach odejmij
     if(adds >= 500){
-        displayed -= 700;
+        target -= 700;
         adds = 0;
     }
 
-    // 🔥 zapisz
-    localStorage.setItem("players", displayed);
+    animateTo(target);
+
+    // 🔥 zapis
+    localStorage.setItem("players", target);
     localStorage.setItem("adds", adds);
 
-    update();
+    // 📊 wykres
+    let time = new Date().toLocaleTimeString();
 
-}, 2000);
+    labels.push(time);
+    playerData.push(target);
+    gameData.push(29000000); // 🔴 stałe gry
+
+    if(labels.length > 12){
+        labels.shift();
+        playerData.shift();
+        gameData.shift();
+    }
+
+    if(!chart){
+        chart = new Chart(document.getElementById("chart"), {
+            type: "line",
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: "Gracze",
+                        data: playerData,
+                        borderColor: "cyan",
+                        borderWidth: 2,
+                        tension: 0.3
+                    },
+                    {
+                        label: "Gry",
+                        data: gameData,
+                        borderColor: "red",
+                        borderWidth: 2,
+                        tension: 0.3
+                    }
+                ]
+            }
+        });
+    } else {
+        chart.data.labels = labels;
+        chart.data.datasets[0].data = playerData;
+        chart.data.datasets[1].data = gameData;
+        chart.update();
+    }
+}
+
+// 🔄 co 2 sekundy
+setInterval(tick, 2000);
 
 // start
-update();
+updateDisplay();
 
 </script>
 
