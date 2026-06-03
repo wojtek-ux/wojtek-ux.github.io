@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<title>UNO V2</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial;
+    background:#0f172a;
+    color:white;
+    text-align:center;
+}
+
+h1{
+    margin-top:20px;
+}
+
+#table{
+    margin-top:30px;
+}
+
+.card{
+    width:90px;
+    height:130px;
+    border-radius:15px;
+    display:inline-flex;
+    justify-content:center;
+    align-items:center;
+    font-size:30px;
+    margin:5px;
+    cursor:pointer;
+    transition:0.2s;
+    font-weight:bold;
+    user-select:none;
+}
+
+.card:hover{
+    transform:translateY(-10px) scale(1.05);
+}
+
+.red{ background:#ef4444; }
+.blue{ background:#3b82f6; }
+.green{ background:#22c55e; }
+.yellow{ background:#eab308; color:black; }
+.black{ background:black; }
+
+#hand{
+    margin-top:40px;
+}
+
+button{
+    margin-top:20px;
+    padding:10px 20px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:16px;
+}
+
+.info{
+    margin-top:10px;
+    color:#94a3b8;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🃏 UNO V2</h1>
+
+<h2 id="turn">🫵 Twoja tura</h2>
+
+<div class="info">
+🤖 Bot ma: <span id="botCards">7</span> kart
+</div>
+
+<div id="table"></div>
+
+<button onclick="drawCard()">➕ Dobierz kartę</button>
+
+<h3>Twoje karty:</h3>
+<div id="hand"></div>
+
+<script>
+
+const colors = ["red","blue","green","yellow"];
+const specials = ["+2","🚫","🌈"];
+
+let player = [];
+let bot = [];
+let currentCard;
+
+/* 🔥 RANDOM CARD */
+function randomCard(){
+
+    let chance = Math.random();
+
+    // specjalna
+    if(chance < 0.25){
+
+        let type = specials[Math.floor(Math.random()*specials.length)];
+
+        return {
+            color: type === "🌈" ? "black" :
+                   colors[Math.floor(Math.random()*colors.length)],
+            special: type
+        };
+    }
+
+    // normalna
+    return {
+        color: colors[Math.floor(Math.random()*colors.length)],
+        number: Math.floor(Math.random()*10)
+    };
+}
+
+/* 🚀 START */
+function start(){
+
+    for(let i=0;i<7;i++){
+        player.push(randomCard());
+        bot.push(randomCard());
+    }
+
+    currentCard = randomCard();
+
+    render();
+}
+
+/* 🎴 TEKST */
+function cardText(c){
+    return c.special || c.number;
+}
+
+/* 🎨 RENDER */
+function render(){
+
+    botCards.innerText = bot.length;
+
+    table.innerHTML = `
+    <div class="card ${currentCard.color}">
+        ${cardText(currentCard)}
+    </div>
+    `;
+
+    hand.innerHTML = "";
+
+    player.forEach((c,index)=>{
+
+        hand.innerHTML += `
+        <div class="card ${c.color}"
+        onclick="play(${index})">
+            ${cardText(c)}
+        </div>
+        `;
+    });
+
+}
+
+/* ✅ CZY MOŻNA */
+function canPlay(c){
+
+    return (
+        c.color === currentCard.color ||
+        c.number === currentCard.number ||
+        c.special === currentCard.special ||
+        c.special === "🌈"
+    );
+}
+
+/* 🎮 GRAJ */
+window.play = function(index){
+
+    let c = player[index];
+
+    if(!canPlay(c)) return;
+
+    currentCard = c;
+
+    player.splice(index,1);
+
+    // 🔥 +2
+    if(c.special === "+2"){
+        bot.push(randomCard());
+        bot.push(randomCard());
+    }
+
+    // 🌈 zmień kolor
+    if(c.special === "🌈"){
+        currentCard.color =
+            colors[Math.floor(Math.random()*colors.length)];
+    }
+
+    render();
+
+    if(player.length <= 0){
+        alert("🔥 WYGRAŁEŚ!");
+        return;
+    }
+
+    // 🚫 skip
+    if(c.special === "🚫"){
+        turn.innerText = "🫵 Pominąłeś bota!";
+        return;
+    }
+
+    botTurn();
+}
+
+/* 🤖 BOT */
+function botTurn(){
+
+    turn.innerText = "🤖 Tura bota";
+
+    setTimeout(()=>{
+
+        let played = false;
+
+        for(let i=0;i<bot.length;i++){
+
+            let c = bot[i];
+
+            if(canPlay(c)){
+
+                currentCard = c;
+
+                bot.splice(i,1);
+
+                played = true;
+
+                // +2
+                if(c.special === "+2"){
+                    player.push(randomCard());
+                    player.push(randomCard());
+                }
+
+                // 🌈
+                if(c.special === "🌈"){
+                    currentCard.color =
+                        colors[Math.floor(Math.random()*colors.length)];
+                }
+
+                // 🚫
+                if(c.special === "🚫"){
+                    render();
+
+                    if(bot.length <= 0){
+                        alert("💀 BOT WYGRAŁ!");
+                    }
+
+                    turn.innerText = "🤖 Bot pominął twoją turę!";
+                    return;
+                }
+
+                break;
+            }
+
+        }
+
+        if(!played){
+            bot.push(randomCard());
+        }
+
+        render();
+
+        if(bot.length <= 0){
+            alert("💀 BOT WYGRAŁ!");
+            return;
+        }
+
+        turn.innerText = "🫵 Twoja tura";
+
+    },1000);
+
+}
+
+/* ➕ DOBIERZ */
+window.drawCard = function(){
+
+    player.push(randomCard());
+
+    render();
+
+    botTurn();
+}
+
+start();
+
+</script>
+
+</body>
+</html>
