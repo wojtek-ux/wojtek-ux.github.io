@@ -2,34 +2,50 @@
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
-<title>UNO V3 💀🔥</title>
+<title>UNO ULTRA 😈🔥</title>
 
 <style>
+
 body{
     margin:0;
     font-family:Arial;
-    background:#0f172a;
+    background:linear-gradient(180deg,#0f172a,#020617);
     color:white;
     text-align:center;
     overflow-x:hidden;
 }
 
+/* 🔥 MENU */
+
+.menu{
+    position:fixed;
+    top:0;
+    width:100%;
+    background:rgba(0,0,0,0.4);
+    backdrop-filter:blur(10px);
+    padding:15px;
+    z-index:999;
+}
+
+.menu button{
+    margin:5px;
+}
+
+/* 🃏 */
+
 h1{
-    margin-top:20px;
-    font-size:50px;
+    margin-top:90px;
+    font-size:55px;
 }
 
 #turn{
-    margin-top:10px;
     color:#22c55e;
 }
 
-#table{
-    margin-top:30px;
-}
-
-.centerCard{
-    transform:scale(1.2);
+.info{
+    margin:10px;
+    color:#94a3b8;
+    font-size:18px;
 }
 
 .card{
@@ -45,11 +61,23 @@ h1{
     transition:0.25s;
     font-weight:bold;
     user-select:none;
-    box-shadow:0 10px 20px rgba(0,0,0,0.3);
+    box-shadow:0 10px 25px rgba(0,0,0,0.4);
+    animation:spawn 0.3s;
+}
+
+@keyframes spawn{
+    from{
+        transform:scale(0);
+        opacity:0;
+    }
+    to{
+        transform:scale(1);
+        opacity:1;
+    }
 }
 
 .card:hover{
-    transform:translateY(-12px) scale(1.08);
+    transform:translateY(-10px) scale(1.08);
 }
 
 .red{ background:#ef4444; }
@@ -61,17 +89,23 @@ h1{
     color:white;
 }
 
+.centerCard{
+    transform:scale(1.2);
+    box-shadow:0 0 30px rgba(255,255,255,0.3);
+}
+
 #hand{
     margin-top:40px;
 }
+
+/* 🔘 */
 
 button{
     padding:12px 24px;
     border:none;
     border-radius:12px;
     cursor:pointer;
-    font-size:17px;
-    margin:10px;
+    font-size:16px;
     transition:0.2s;
 }
 
@@ -86,66 +120,127 @@ button:hover{
 .uno{
     background:#ef4444;
     color:white;
-    font-weight:bold;
 }
 
-.info{
-    color:#94a3b8;
-    margin-top:10px;
-    font-size:18px;
+.restart{
+    background:#22c55e;
 }
+
+/* 🏆 */
 
 .win{
     position:fixed;
     inset:0;
-    background:rgba(0,0,0,0.8);
+    background:rgba(0,0,0,0.85);
     display:flex;
     justify-content:center;
     align-items:center;
+    flex-direction:column;
     font-size:50px;
-    z-index:999;
+    z-index:9999;
+    animation:fade 0.4s;
 }
+
+@keyframes fade{
+    from{opacity:0;}
+    to{opacity:1;}
+}
+
+/* 📊 */
+
+.stats{
+    margin-top:10px;
+    color:#94a3b8;
+}
+
 </style>
 </head>
 
 <body>
 
-<h1>🃏 UNO V3</h1>
+<!-- 🔥 MENU -->
+<div class="menu">
+
+<button onclick="restartGame()" class="restart">
+🔄 Restart
+</button>
+
+<button onclick="toggleMusic()">
+🎵 Muzyka
+</button>
+
+<button onclick="toggleTheme()">
+🌙 Motyw
+</button>
+
+</div>
+
+<h1>🃏 UNO ULTRA</h1>
 
 <h2 id="turn">🫵 Twoja tura</h2>
 
 <div class="info">
-🤖 Bot ma: <span id="botCards">7</span> kart
+🤖 Bot ma:
+<span id="botCards">7</span>
+kart
+</div>
+
+<div class="stats">
+🏆 Wygrane:
+<span id="wins">0</span>
+|
+💀 Przegrane:
+<span id="loses">0</span>
 </div>
 
 <div id="table"></div>
 
-<button class="draw" onclick="drawCard()">➕ Dobierz</button>
-<button class="uno" onclick="sayUNO()">UNO!</button>
+<button class="draw" onclick="drawCard()">
+➕ Dobierz
+</button>
+
+<button class="uno" onclick="sayUNO()">
+UNO!
+</button>
 
 <h2>Twoje karty</h2>
 
 <div id="hand"></div>
 
+<!-- 🔊 AUDIO -->
+<audio id="music" loop>
+<source src="https://cdn.pixabay.com/audio/2022/03/15/audio_c8c8a73467.mp3">
+</audio>
+
 <script>
 
+/* 🔥 DANE */
+
 const colors = ["red","blue","green","yellow"];
-const specials = ["+2","🚫","🌈"];
+const specials = ["+2","🌈"];
 
 let player = [];
 let bot = [];
 let currentCard;
 let playerTurn = true;
 
-/* 🔥 RANDOM CARD */
+let wins = parseInt(localStorage.getItem("wins")) || 0;
+let loses = parseInt(localStorage.getItem("loses")) || 0;
+
+winsEl.innerText = wins;
+losesEl.innerText = loses;
+
+/* 🎴 RANDOM CARD */
+
 function randomCard(){
 
     let chance = Math.random();
 
-    // ✨ special
+    // ✨ SPECIAL
     if(chance < 0.25){
 
-        let type = specials[Math.floor(Math.random()*specials.length)];
+        let type =
+            specials[Math.floor(Math.random()*specials.length)];
 
         return {
             color: type === "🌈"
@@ -156,7 +251,7 @@ function randomCard(){
         };
     }
 
-    // 🔢 normal
+    // 🔢 NORMAL
     return {
         color: colors[Math.floor(Math.random()*colors.length)],
         number: Math.floor(Math.random()*10)
@@ -164,7 +259,11 @@ function randomCard(){
 }
 
 /* 🚀 START */
+
 function start(){
+
+    player = [];
+    bot = [];
 
     for(let i=0;i<7;i++){
         player.push(randomCard());
@@ -176,12 +275,14 @@ function start(){
     render();
 }
 
-/* 📝 TEXT */
+/* 🎨 TEXT */
+
 function cardText(c){
     return c.special || c.number;
 }
 
-/* 🎨 RENDER */
+/* 🎴 RENDER */
+
 function render(){
 
     botCards.innerText = bot.length;
@@ -201,9 +302,7 @@ function render(){
         hand.innerHTML += `
         <div
             class="card ${c.color}"
-            style="
-            opacity:${playable ? 1 : 0.4};
-            "
+            style="opacity:${playable ? 1 : 0.4}"
             onclick="play(${index})"
         >
             ${cardText(c)}
@@ -213,16 +312,14 @@ function render(){
 
 }
 
-/* ✅ UNO RULES */
+/* ✅ RULES */
+
 function canPlay(c){
 
-    // 🌈 zawsze można
     if(c.special === "🌈") return true;
 
-    // 🎨 kolor
     if(c.color === currentCard.color) return true;
 
-    // 🔢 liczby
     if(
         c.number !== undefined &&
         currentCard.number !== undefined &&
@@ -231,7 +328,6 @@ function canPlay(c){
         return true;
     }
 
-    // ✨ speciale
     if(
         c.special &&
         currentCard.special &&
@@ -244,6 +340,7 @@ function canPlay(c){
 }
 
 /* 🎮 PLAY */
+
 window.play = function(index){
 
     if(!playerTurn) return;
@@ -262,7 +359,7 @@ window.play = function(index){
         bot.push(randomCard());
     }
 
-    // 🌈 wild
+    // 🌈
     if(c.special === "🌈"){
         currentCard.color =
             colors[Math.floor(Math.random()*colors.length)];
@@ -272,18 +369,19 @@ window.play = function(index){
 
     // 🃏 UNO
     if(player.length === 1){
-        turn.innerText = "⚠️ Powiedz UNO!";
+        turn.innerText = "⚠️ UNO!";
     }
 
     // 🏆 WIN
     if(player.length <= 0){
-        showWin("🔥 WYGRAŁEŚ!");
-        return;
-    }
 
-    // 🚫 SKIP
-    if(c.special === "🚫"){
-        turn.innerText = "😈 Pominąłeś bota!";
+        wins++;
+        localStorage.setItem("wins",wins);
+
+        winsEl.innerText = wins;
+
+        showWin("🔥 WYGRAŁEŚ!");
+
         return;
     }
 
@@ -293,6 +391,7 @@ window.play = function(index){
 }
 
 /* 🤖 BOT */
+
 function botTurn(){
 
     turn.innerText = "🤖 Tura bota";
@@ -325,36 +424,27 @@ function botTurn(){
                         colors[Math.floor(Math.random()*colors.length)];
                 }
 
-                // 🚫 skip
-                if(c.special === "🚫"){
-
-                    render();
-
-                    if(bot.length <= 0){
-                        showWin("💀 BOT WYGRAŁ!");
-                    }
-
-                    turn.innerText =
-                        "💀 Bot pominął twoją turę!";
-
-                    return;
-                }
-
                 break;
             }
 
         }
 
-        // ❌ bot nie ma karty
         if(!played){
             bot.push(randomCard());
         }
 
         render();
 
-        // 🏆 WIN
+        // 💀 LOSE
         if(bot.length <= 0){
+
+            loses++;
+            localStorage.setItem("loses",loses);
+
+            losesEl.innerText = loses;
+
             showWin("💀 BOT WYGRAŁ!");
+
             return;
         }
 
@@ -362,11 +452,12 @@ function botTurn(){
 
         turn.innerText = "🫵 Twoja tura";
 
-    },1200);
+    },1000);
 
 }
 
 /* ➕ DRAW */
+
 window.drawCard = function(){
 
     if(!playerTurn) return;
@@ -381,24 +472,81 @@ window.drawCard = function(){
 }
 
 /* 🃏 UNO */
+
 window.sayUNO = function(){
 
     if(player.length === 1){
         alert("🔥 UNO!");
     }else{
-        alert("💀 Nie możesz teraz powiedzieć UNO");
+        alert("💀 Nie możesz teraz!");
     }
 
 }
 
 /* 🏆 END */
+
 function showWin(text){
 
     document.body.innerHTML += `
     <div class="win">
-        ${text}
+        <div>${text}</div>
+
+        <button
+        class="restart"
+        onclick="restartGame()"
+        >
+        🔄 Graj ponownie
+        </button>
     </div>
     `;
+}
+
+/* 🔄 RESET */
+
+window.restartGame = function(){
+    location.reload();
+}
+
+/* 🎵 MUSIC */
+
+let musicOn = false;
+
+window.toggleMusic = function(){
+
+    let m = document.getElementById("music");
+
+    if(!musicOn){
+        m.play();
+        musicOn = true;
+    }else{
+        m.pause();
+        musicOn = false;
+    }
+
+}
+
+/* 🌙 THEME */
+
+let dark = true;
+
+window.toggleTheme = function(){
+
+    if(dark){
+
+        document.body.style.background =
+            "linear-gradient(180deg,#f8fafc,#cbd5e1)";
+
+        document.body.style.color = "black";
+
+    }else{
+
+        document.body.style.background =
+            "linear-gradient(180deg,#0f172a,#020617)";
+
+        document.body.style.color = "white";
+    }
+
+    dark = !dark;
 }
 
 start();
